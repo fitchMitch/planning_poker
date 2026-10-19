@@ -62,7 +62,8 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  # Behaviour-driven acceptance tests [https://cucumber.io/docs/guides/]
+  gem "cucumber-rails", require: false
+  gem "database_cleaner-active_record"
   gem "capybara"
-  gem "selenium-webdriver"
 end
