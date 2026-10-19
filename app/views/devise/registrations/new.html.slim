@@ -1,0 +1,25 @@
+h2 S'inscrire
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    p = f.label :email, "E-mail"
+    p = f.email_field :email, autofocus: true, autocomplete: "email"
+
+  .field
+    p = f.label :password, "Mot de passe"
+    - if @minimum_password_length
+      p
+        em
+          | (#{@minimum_password_length} caractères minimum)
+    p = f.password_field :password, autocomplete: "new-password"
+
+  .field
+    p = f.label :password_confirmation, "Confirmation du mot de passe"
+    p = f.password_field :password_confirmation, autocomplete: "new-password"
+
+  .actions
+    = f.submit "S'inscrire"
+
+= render "devise/shared/links"

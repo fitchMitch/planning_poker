@@ -1,0 +1,13 @@
+h2 Mot de passe oublié ?
+
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    p = f.label :email, "E-mail"
+    p = f.email_field :email, autofocus: true, autocomplete: "email"
+
+  .actions
+    = f.submit "Envoyer les instructions de réinitialisation"
+
+= render "devise/shared/links"

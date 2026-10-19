@@ -1,0 +1,3 @@
+# Joining a Game always requires approval
+
+Users can locate a Game via its name, its URL, or the public listing of all Games, but none of these grant entry directly. Becoming a Participant always requires submitting a JoinRequest, which the Creator or any current Participant can accept or reject (a single decision is final, no consensus needed). This was a deliberate choice over letting a known name/URL grant direct access, so that existing Participants retain control over who joins their Game even when its name or URL has been shared or guessed. A User is limited to 2 JoinRequests per Game (1 initial attempt + 1 retry); a second rejection bars them from that Game permanently.

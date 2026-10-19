@@ -1,0 +1,7 @@
+p Bonjour #{@resource.email} !
+
+p Votre compte a été verrouillé suite à un nombre excessif de tentatives de connexion échouées.
+
+p Cliquez sur le lien ci-dessous pour déverrouiller votre compte :
+
+p = link_to "Déverrouiller mon compte", unlock_url(@resource, unlock_token: @token)

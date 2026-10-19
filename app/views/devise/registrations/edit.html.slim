@@ -1,0 +1,41 @@
+h2 Modifier mon compte
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    p = f.label :email, "E-mail"
+    p = f.email_field :email, autofocus: true, autocomplete: "email"
+
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    div En attente de confirmation pour : #{resource.unconfirmed_email}
+
+  .field
+    p
+      = f.label :password, "Nouveau mot de passe"
+      i (laisser vide pour ne pas le changer)
+    p = f.password_field :password, autocomplete: "new-password"
+    - if @minimum_password_length
+      p
+        em #{@minimum_password_length} caractères minimum
+
+  .field
+    p = f.label :password_confirmation, "Confirmation du nouveau mot de passe"
+    p = f.password_field :password_confirmation, autocomplete: "new-password"
+
+  .field
+    p
+      = f.label :current_password, "Mot de passe actuel"
+      i (nécessaire pour confirmer vos changements)
+    p = f.password_field :current_password, autocomplete: "current-password"
+
+  .actions
+    = f.submit "Mettre à jour"
+
+h3 Supprimer mon compte
+
+div
+  | Vous souhaitez partir ?
+  = button_to "Supprimer mon compte", registration_path(resource_name), data: { confirm: "Êtes-vous sûr ?", turbo_confirm: "Êtes-vous sûr ?" }, method: :delete
+
+= link_to "Retour", request.referer || root_path
