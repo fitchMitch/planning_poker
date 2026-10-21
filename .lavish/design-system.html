@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oscar's Games — système de conception</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  * , *::before, *::after { box-sizing: border-box; }
+  :where(.grid, .flex) > * { min-width: 0; }
+  :where(p, h1, h2, h3, h4, li, dd, td, th, .ds-label) { overflow-wrap: anywhere; }
+
+  html, body {
+    margin: 0;
+    background: var(--surface-100);
+    color: var(--ink);
+    font-family: var(--sans);
+  }
+
+  body { padding-bottom: var(--space-24); }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-16) 0;
+  }
+
+  header.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-16);
+    flex-wrap: wrap;
+    padding-bottom: var(--space-16);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--space-16);
+  }
+
+  .hero-text { max-width: 640px; }
+  .eyebrow { color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; font-weight: 700; margin: 0 0 var(--space-4); }
+
+  .theme-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 2px;
+    background: var(--surface-200);
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .theme-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    font: 600 13px/18px var(--sans);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
+  .theme-toggle button.active { background: var(--primary); color: var(--on-primary); }
+
+  section { margin-bottom: var(--space-24); }
+  section > h2 {
+    font: 700 24px/32px var(--sans);
+    margin: 0 0 var(--space-4);
+  }
+  .section-note { color: var(--ink-muted); font: 400 15px/22px var(--sans); margin: 0 0 var(--space-12); max-width: 680px; }
+
+  .answer-card {
+    background: var(--surface-200);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-12) var(--space-16);
+    font: 500 17px/26px var(--sans);
+  }
+  .answer-card b { color: var(--primary); }
+
+  /* Color swatches */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-8);
+  }
+  .swatch {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface-200);
+  }
+  .swatch-fill {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 600 13px/18px var(--sans);
+  }
+  .swatch-meta { padding: var(--space-6) var(--space-8); }
+  .swatch-meta .name { font: 600 13px/18px var(--sans); display: block; }
+  .swatch-meta .val { font: 400 12px/18px ui-monospace, monospace; color: var(--ink-muted); }
+  .swatch.role-note { grid-column: 1 / -1; }
+
+  /* Type scale */
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-12);
+    padding: var(--space-6) 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-row .tag { font: 600 12px/18px ui-monospace, monospace; color: var(--ink-muted); white-space: nowrap; }
+
+  /* Spacing + radius */
+  .scale-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-8); }
+  .scale-item { display: flex; align-items: center; gap: var(--space-8); background: var(--surface-200); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-6) var(--space-8); }
+  .scale-bar { background: var(--primary); height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .scale-item .label { font: 600 12px/18px ui-monospace, monospace; color: var(--ink-muted); }
+
+  /* Component demo shell */
+  .demo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: var(--space-16);
+  }
+  @media (max-width: 760px) { .demo-grid { grid-template-columns: 1fr; } }
+  .demo-stage {
+    background: var(--surface-200);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    justify-content: center;
+  }
+  .rules-card {
+    background: var(--surface-300);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-12);
+  }
+  .rules-card h3 { margin: 0 0 var(--space-4); font: 600 15px/22px var(--sans); }
+  .rules-card ul { margin: 0; padding-left: 18px; font: 400 14px/21px var(--sans); color: var(--ink); }
+  .rules-card li { margin-bottom: var(--space-4); }
+  .css-ref { font: 400 12px/18px ui-monospace, monospace; color: var(--ink-muted); }
+
+  /* Formulaire */
+  .ds-field { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-8); }
+  .ds-field:last-child { margin-bottom: 0; }
+  .ds-field label { font: 600 13px/18px var(--sans); color: var(--ink); }
+  .ds-input {
+    min-height: 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-200);
+    color: var(--ink);
+    padding: 0 var(--space-8);
+    font: 400 16px/24px var(--sans);
+  }
+  .ds-input::placeholder { color: var(--ink-muted); }
+  .ds-input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .ds-input.invalid { border-color: var(--danger); }
+  .ds-field .hint { font: 400 13px/18px var(--sans); color: var(--ink-muted); }
+  .ds-field .hint.error { color: var(--danger); }
+
+  .ds-select {
+    min-height: 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-200);
+    color: var(--ink);
+    padding: 0 var(--space-8);
+    font: 400 16px/24px var(--sans);
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-muted) 50%), linear-gradient(135deg, var(--ink-muted) 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(50% - 3px), calc(100% - 15px) calc(50% - 3px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+  .ds-select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .ds-checkbox-row { display: flex; align-items: center; gap: var(--space-6); min-height: 44px; }
+  .ds-checkbox-row input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--primary);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+  .ds-checkbox-row input[type="checkbox"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .ds-checkbox-row label { font: 400 15px/22px var(--sans); color: var(--ink); }
+
+  /* CarteQuiz */
+  .ds-quiz-card { background: var(--surface-200); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-12); }
+  .ds-quiz-q { font: 600 16px/24px var(--sans); margin: 0 0 var(--space-8); }
+  .ds-quiz-opt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-200);
+    padding: 0 var(--space-8);
+    margin-bottom: var(--space-6);
+    font: 400 15px/22px var(--sans);
+  }
+  .ds-quiz-opt:last-child { margin-bottom: 0; }
+  .ds-quiz-opt.selected { border-color: var(--primary); background: var(--surface-300); }
+  .ds-quiz-opt.correct { border-color: var(--success); color: var(--success); background: var(--surface-300); font-weight: 600; }
+  .ds-quiz-opt.incorrect { border-color: var(--danger); color: var(--danger); background: var(--surface-300); font-weight: 600; }
+  .ds-quiz-opt .mark { font-weight: 700; font-size: 20px; line-height: 1; }
+
+  /* BarreProgression */
+  .ds-progress-track { background: var(--surface-300); border-radius: var(--radius-pill); height: 14px; overflow: hidden; }
+  .ds-progress-fill { background: var(--primary); height: 100%; border-radius: var(--radius-pill); }
+  .ds-progress-label { font: 600 13px/18px var(--sans); color: var(--ink-muted); margin-top: var(--space-4); display: block; }
+
+  /* Badge */
+  .ds-badge { display: inline-flex; align-items: center; gap: var(--space-4); background: var(--accent); color: var(--on-accent); border-radius: var(--radius-pill); padding: 8px 16px; font: 600 13px/18px var(--sans); }
+
+  /* RetourFeedback */
+  .ds-feedback { display: flex; align-items: center; gap: var(--space-6); border-radius: var(--radius-sm); padding: var(--space-8) var(--space-8); font: 500 15px/22px var(--sans); }
+  .ds-feedback.success { background: var(--success); color: var(--on-success); }
+  .ds-feedback.danger { background: var(--danger); color: var(--on-danger); }
+
+  footer.closing {
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-24);
+    padding-top: var(--space-16);
+  }
+  footer.closing h2 { font: 700 20px/28px var(--sans); margin: 0 0 var(--space-6); }
+  footer.closing ul { margin: 0; padding-left: 18px; font: 400 15px/22px var(--sans); color: var(--ink-muted); }
+  footer.closing li { margin-bottom: var(--space-4); }
+  footer.closing a { color: var(--primary); }
+</style>
+</head>
+<body class="ds-root">
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Explication — système de conception</p>
+      <h1 style="font:700 32px/40px var(--sans); margin:0 0 8px;">Oscar's Games</h1>
+      <p style="font:400 16px/24px var(--sans); color:var(--ink-muted); margin:0;">
+        Charte visuelle pour un jeu sérieux de formation en entreprise : calme, lisible, pensé tablette.
+        Source de référence : <a href="https://claude.ai/artifact/SSVz6QwRJGzwsFuX6vaaoA" style="color:var(--primary)">Artifact Claude</a>,
+        copiée dans ce dépôt sous <code class="css-ref">app/assets/stylesheets/design_system/</code> et <code class="css-ref">docs/design-system/</code>.
+      </p>
+    </div>
+    <div class="theme-toggle" role="group" aria-label="Thème">
+      <button type="button" data-theme-btn="light" class="active">Clair</button>
+      <button type="button" data-theme-btn="dark">Sombre</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="answer-card">
+      Ce système donne <b>5 composants</b> (Bouton, CarteQuiz, BarreProgression, Badge, RetourFeedback)
+      bâtis sur un jeu de tokens unique, déjà intégré en CSS au dépôt — pas une proposition, un état existant.
+    </div>
+  </section>
+
+  <section id="couleur">
+    <h2>Couleur</h2>
+    <p class="section-note">
+      <code class="css-ref">primary</code> (sarcelle) porte l'action et la progression. <code class="css-ref">accent</code> (ambre)
+      est réservé aux récompenses, pour garder son signal distinct. <code class="css-ref">success</code>/<code class="css-ref">danger</code>
+      sont dédiés au retour sur les réponses, jamais réutilisés ailleurs. Contraste minimum 4,5:1 dans les deux thèmes.
+    </p>
+    <div class="swatch-grid" id="swatches"></div>
+  </section>
+
+  <section id="typo">
+    <h2>Typographie</h2>
+    <p class="section-note">Une seule famille, <code class="css-ref">Figtree</code>. Titres en 600–700, texte courant en 400.</p>
+    <div style="background:var(--surface-200); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-12) var(--space-16);">
+      <div class="type-row"><span class="ds-heading-xl">Titre XL</span><span class="tag">.ds-heading-xl · 700 32/40</span></div>
+      <div class="type-row"><span class="ds-heading-lg">Titre LG</span><span class="tag">.ds-heading-lg · 700 24/32</span></div>
+      <div class="type-row"><span class="ds-heading-md">Titre MD</span><span class="tag">.ds-heading-md · 600 18/26</span></div>
+      <div class="type-row"><span class="ds-body">Texte courant</span><span class="tag">.ds-body · 400 16/24</span></div>
+      <div class="type-row"><span class="ds-body-sm">Texte secondaire</span><span class="tag">.ds-body-sm · 400 14/20</span></div>
+      <div class="type-row"><span class="ds-label">LIBELLÉ</span><span class="tag">.ds-label · 600 13/18</span></div>
+    </div>
+  </section>
+
+  <section id="espacement">
+    <h2>Espacement &amp; rayons</h2>
+    <p class="section-note">Échelle en incréments de 4px. Les rayons distinguent contrôles, cartes, panneaux et formes rondes.</p>
+    <div class="demo-grid">
+      <div>
+        <div class="scale-grid" id="spacing"></div>
+      </div>
+      <div>
+        <div class="scale-grid" id="radius"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="bouton">
+    <h2>Bouton</h2>
+    <p class="section-note">Une action principale par écran ; le reste en secondaire. <span class="css-ref">.ds-btn, .ds-btn-primary, .ds-btn-secondary</span></p>
+    <div class="demo-grid">
+      <div class="demo-stage">
+        <button class="ds-btn ds-btn-primary">Valider la réponse</button>
+        <button class="ds-btn ds-btn-secondary">Revoir la leçon</button>
+        <button class="ds-btn ds-btn-primary" disabled>Niveau suivant</button>
+      </div>
+      <div class="rules-card">
+        <h3>Règles</h3>
+        <ul>
+          <li>Hauteur minimale 44px (cible tactile tablette).</li>
+          <li>Le focus clavier affiche toujours l'anneau <code class="css-ref">focus-ring</code>.</li>
+          <li>Le texte est un verbe d'action, jamais « OK » ou « Cliquez ici ».</li>
+          <li>Désactivé : jamais la seule action visible à l'écran.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="formulaire">
+    <h2>Formulaire <span class="css-ref" style="font-weight:400; font-size:13px;">(nouveau, pas encore dans la charte)</span></h2>
+    <p class="section-note">
+      Début de la partie formulaire : champ texte simple, sur le même gabarit que le bouton
+      (hauteur 44px, bordure <code class="css-ref">border</code>, anneau <code class="css-ref">focus-ring</code> au clavier).
+      À valider avant d'ajouter d'autres types de champs.
+    </p>
+    <div class="demo-grid">
+      <div class="demo-stage">
+        <div class="ds-field">
+          <label for="demo-name">Nom complet</label>
+          <input id="demo-name" class="ds-input" type="text" placeholder="Jeanne Dupont">
+        </div>
+        <div class="ds-field">
+          <label for="demo-email">E-mail professionnel</label>
+          <input id="demo-email" class="ds-input invalid" type="text" value="jeanne@" aria-invalid="true">
+          <span class="hint error">Adresse incomplète — vérifiez le domaine.</span>
+        </div>
+        <div class="ds-field">
+          <label for="demo-role">Niveau de formation</label>
+          <select id="demo-role" class="ds-select">
+            <option>Débutant</option>
+            <option>Intermédiaire</option>
+            <option>Avancé</option>
+          </select>
+        </div>
+        <div class="ds-field">
+          <div class="ds-checkbox-row">
+            <input id="demo-consent" type="checkbox" checked>
+            <label for="demo-consent">Je confirme avoir suivi le module précédent</label>
+          </div>
+          <div class="ds-checkbox-row">
+            <input id="demo-notify" type="checkbox">
+            <label for="demo-notify">Me prévenir par e-mail après chaque niveau</label>
+          </div>
+        </div>
+      </div>
+      <div class="rules-card">
+        <h3>Règles proposées</h3>
+        <ul>
+          <li>Hauteur 44px minimum, comme <code class="css-ref">.ds-btn</code>, pour la cible tactile tablette — vaut aussi pour le menu select et la zone de clic de la case à cocher.</li>
+          <li>Bordure <code class="css-ref">border</code> au repos, anneau <code class="css-ref">focus-ring</code> au focus clavier, sur tous les champs y compris select et checkbox.</li>
+          <li>Champ invalide : bordure <code class="css-ref">danger</code> + message sous le champ, jamais la couleur seule.</li>
+          <li>Case à cocher : couleur de remplissage <code class="css-ref">primary</code> à l'état cochée, jamais <code class="css-ref">accent</code> (réservé aux récompenses).</li>
+          <li>Non confirmé : à faire valider puis ajouter aux tokens avant usage en production.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="cartequiz">
+    <h2>CarteQuiz</h2>
+    <p class="section-note">Question à choix multiple, le cœur de l'interaction pédagogique. Une seule question par carte, options en colonne.</p>
+    <div class="demo-grid">
+      <div class="demo-stage">
+        <div class="ds-quiz-card">
+          <p class="ds-quiz-q">Quelle action réduit un risque de non-conformité ?</p>
+          <div class="ds-quiz-opt">Ignorer la procédure si elle ralentit le client</div>
+          <div class="ds-quiz-opt correct"><span class="mark">✓</span> Vérifier l'identité avant toute opération sensible</div>
+          <div class="ds-quiz-opt selected incorrect"><span class="mark">✕</span> Valider sans contrôle si le client est pressé</div>
+        </div>
+      </div>
+      <div class="rules-card">
+        <h3>Règles</h3>
+        <ul>
+          <li>Repos : <code class="css-ref">surface-200</code> + bordure <code class="css-ref">border</code>.</li>
+          <li>Sélectionnée avant validation : bordure <code class="css-ref">primary</code>.</li>
+          <li>Correcte : bordure/icône <code class="css-ref">success</code>. Incorrecte : <code class="css-ref">danger</code>, affichée uniquement sur l'option choisie.</li>
+          <li>Cible tactile ≥ 44px par option ; jamais de grille dense.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="barreprogression">
+    <h2>BarreProgression</h2>
+    <p class="section-note">Avancement dans un niveau ou un parcours, toujours accompagné d'un texte.</p>
+    <div class="demo-grid">
+      <div class="demo-stage">
+        <div>
+          <div class="ds-progress-track" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+            <div class="ds-progress-fill" style="width:60%"></div>
+          </div>
+          <span class="ds-progress-label">3 / 5 questions</span>
+        </div>
+      </div>
+      <div class="rules-card">
+        <h3>Règles</h3>
+        <ul>
+          <li>Jamais la couleur seule — toujours un texte (« 3 / 5 » ou « 60 % »).</li>
+          <li>Remplissage <code class="css-ref">primary</code>, piste <code class="css-ref">surface-300</code>, coins <code class="css-ref">radius-pill</code>.</li>
+          <li><code class="css-ref">role="progressbar"</code> avec les attributs <code class="css-ref">aria-value*</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="badge">
+    <h2>Badge</h2>
+    <p class="section-note">Jalon ou récompense débloqués. Garde le signal de récompense distinct de l'action courante.</p>
+    <div class="demo-grid">
+      <div class="demo-stage" style="flex-direction:row; flex-wrap:wrap;">
+        <span class="ds-badge">🏆 5 bonnes réponses</span>
+        <span class="ds-badge">⭐ Niveau conformité validé</span>
+      </div>
+      <div class="rules-card">
+        <h3>Règles</h3>
+        <ul>
+          <li>Utilise <code class="css-ref">accent</code>, jamais <code class="css-ref">primary</code>.</li>
+          <li>Toujours un libellé court, jamais une icône seule.</li>
+          <li>Forme <code class="css-ref">radius-pill</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="retourfeedback">
+    <h2>RetourFeedback</h2>
+    <p class="section-note">Bandeau de confirmation juste après une réponse ou une action.</p>
+    <div class="demo-grid">
+      <div class="demo-stage">
+        <div class="ds-feedback success">✓ Bonne réponse — vous avez bien identifié le risque.</div>
+        <div class="ds-feedback danger">✕ Pas tout à fait — relisez la section « Contrôle d'identité ».</div>
+      </div>
+      <div class="rules-card">
+        <h3>Règles</h3>
+        <ul>
+          <li>Succès : <code class="css-ref">success</code>/<code class="css-ref">on-success</code>. Erreur : <code class="css-ref">danger</code>/<code class="css-ref">on-danger</code>, toujours avec une phrase qui explique pourquoi.</li>
+          <li>Près de l'élément concerné, jamais en popup bloquante pour une erreur récupérable.</li>
+          <li>Visible au moins 2 secondes avant de pouvoir être ignoré.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="closing">
+    <h2>Ce qui est volontairement laissé de côté</h2>
+    <ul>
+      <li>Les classes CSS de CarteQuiz, BarreProgression, Badge et RetourFeedback sont définies ici pour la démonstration ; seuls <code class="css-ref">.ds-btn</code>, <code class="css-ref">.ds-card</code> et les styles de texte existent déjà dans <code class="css-ref">components.css</code> au dépôt.</li>
+      <li>Le ton éditorial (vocabulaire, pédagogie du feedback) est documenté dans le README mais non illustré ici — voir <code class="css-ref">docs/design-system/README.md</code>.</li>
+      <li>Toute évolution des tokens doit repartir de l'Artifact Claude, pas d'une édition manuelle de ces fichiers.</li>
+      <li>Le champ texte de la section Formulaire est une proposition pour cette revue, pas encore un composant validé dans la charte ni dans <code class="css-ref">components.css</code>.</li>
+    </ul>
+  </footer>
+
+</div>
+
+<script>
+  const colors = [
+    { name: 'surface-100', role: 'Fond de page' },
+    { name: 'surface-200', role: 'Cartes, contrôles' },
+    { name: 'surface-300', role: 'États survol/sélection' },
+    { name: 'border', role: 'Bordures' },
+    { name: 'ink', role: 'Texte principal', on: 'surface-200' },
+    { name: 'ink-muted', role: 'Texte secondaire', on: 'surface-200' },
+    { name: 'primary', role: 'Action, progression', on: 'on-primary' },
+    { name: 'accent', role: 'Récompense, badge', on: 'on-accent' },
+    { name: 'success', role: 'Réponse correcte', on: 'on-success' },
+    { name: 'danger', role: 'Réponse incorrecte', on: 'on-danger' },
+  ];
+
+  const swatchGrid = document.getElementById('swatches');
+  for (const c of colors) {
+    const el = document.createElement('div');
+    el.className = 'swatch';
+    const textColor = c.on ? `var(--${c.on})` : 'var(--ink)';
+    el.innerHTML = `
+      <div class="swatch-fill" style="background:var(--${c.name}); color:${textColor};">Aa</div>
+      <div class="swatch-meta"><span class="name">${c.name}</span><span class="val">${c.role}</span></div>
+    `;
+    swatchGrid.appendChild(el);
+  }
+
+  const spacing = [2, 4, 6, 8, 12, 16, 24];
+  const spacingGrid = document.getElementById('spacing');
+  for (const s of spacing) {
+    const px = { 2: 4, 4: 8, 6: 12, 8: 16, 12: 24, 16: 32, 24: 48 }[s];
+    const el = document.createElement('div');
+    el.className = 'scale-item';
+    el.innerHTML = `<span class="scale-bar" style="width:${px}px"></span><span class="label">space-${s} · ${px}px</span>`;
+    spacingGrid.appendChild(el);
+  }
+
+  const radii = [
+    { name: 'radius-sm', px: 6 },
+    { name: 'radius-md', px: 12 },
+    { name: 'radius-lg', px: 20 },
+    { name: 'radius-pill', px: 999 },
+  ];
+  const radiusGrid = document.getElementById('radius');
+  for (const r of radii) {
+    const el = document.createElement('div');
+    el.className = 'scale-item';
+    el.innerHTML = `<span style="width:28px;height:28px;background:var(--primary);border-radius:var(--${r.name});flex-shrink:0;"></span><span class="label">${r.name}</span>`;
+    radiusGrid.appendChild(el);
+  }
+
+  const buttons = document.querySelectorAll('[data-theme-btn]');
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.documentElement.setAttribute('data-theme', btn.dataset.themeBtn);
+      buttons.forEach((b) => b.classList.toggle('active', b === btn));
+    });
+  });
+</script>
+</body>
+</html>
