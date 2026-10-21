@@ -368,6 +368,12 @@ GEM
       activejob (>= 7.2)
       activerecord (>= 7.2)
       railties (>= 7.2)
+    solid_errors (0.9.1)
+      actionpack (>= 7.1)
+      actionview (>= 7.1)
+      activerecord (>= 7.1)
+      activesupport (>= 7.1)
+      railties (>= 7.1)
     solid_queue (1.7.0)
       activejob (>= 7.1)
       activerecord (>= 7.1)
@@ -455,6 +461,7 @@ DEPENDENCIES
   slim-rails
   solid_cable
   solid_cache
+  solid_errors
   solid_queue
   sqlite3 (>= 2.1)
   stimulus-rails
