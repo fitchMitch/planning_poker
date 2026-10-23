@@ -20,3 +20,8 @@ Feature: User registration
     Given I am on the home page
     When I sign up with email "carol@example.com" and password "Password123" confirmed by "Other12345"
     Then I should see "Password confirmation doesn't match Password"
+
+  Scenario: A visitor signs up with a blank email
+    Given I am on the home page
+    When I sign up with email "" and password "Password123"
+    Then I should see "Email can't be blank"
