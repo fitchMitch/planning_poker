@@ -1,10 +1,61 @@
-h1 Planning Poker
+.ds-root
+  - if user_signed_in?
+    header.nav
+      .nav-brand
+        .nav-logo PP
+        span.ds-heading-md Planning Poker
+      ul.nav-links
+        li: a.is-active href="#" Mes parties
+        li: a href="#" Toutes les parties
+        li: a href="#" Créer une partie
+      .nav-actions
+        button.ds-btn.nav-toggle.ds-btn-secondary type="button" aria-label="Menu" ☰
+        span.ds-body-sm style="color: var(--ink-muted);" = current_user.email
+        = button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "ds-btn ds-btn-secondary"
 
-- if user_signed_in?
-  p
-    | Connecté en tant que
-    = current_user.email
-  = button_to "Se déconnecter", destroy_user_session_path, method: :delete
-- else
-  = link_to "S'inscrire", new_user_registration_path
-  = link_to "Se connecter", new_user_session_path
+    main.hero
+      h1.ds-heading-xl Bon retour !
+      p.ds-body.lede Prête à estimer ? Créez une nouvelle partie ou rejoignez-en une déjà en cours.
+      .hero-actions
+        a.ds-btn.ds-btn-primary href="#" Créer une partie
+        a.ds-btn.ds-btn-secondary href="#" Parcourir les parties
+
+  - else
+    header.nav
+      .nav-brand
+        .nav-logo PP
+        span.ds-heading-md Planning Poker
+      ul.nav-links
+        li: a.is-active href="#" Accueil
+        li: a href="#" Comment ça marche
+      .nav-actions
+        = link_to "Se connecter", new_user_session_path, class: "ds-btn ds-btn-secondary"
+        = link_to "S'inscrire", new_user_registration_path, class: "ds-btn ds-btn-primary"
+
+    main.hero
+      span.hero-eyebrow Gratuit · Sans installation
+      h1.ds-heading-xl Estimez vos tickets en équipe, sans effort.
+      p.ds-body.lede
+        | Planning Poker réunit votre équipe autour d'une estimation collective en temps réel. Créez une partie, invitez vos collègues, votez.
+      .hero-actions
+        a.ds-btn.ds-btn-primary href="#" Créer une partie
+        = link_to "Voir comment ça marche", "#", class: "ds-btn ds-btn-secondary"
+
+    section.how aria-label="Comment ça marche"
+      .ds-card.step-card
+        .step-num 1
+        h3.ds-heading-md Créez une partie
+        p.ds-body-sm Choisissez un nom, votre partie est immédiatement visible et accessible par lien.
+      .ds-card.step-card
+        .step-num 2
+        h3.ds-heading-md Invitez votre équipe
+        p.ds-body-sm Chaque coéquipier rejoint via une demande, validée par vous ou un participant.
+      .ds-card.step-card
+        .step-num 3
+        h3.ds-heading-md Estimez ensemble
+        p.ds-body-sm Votez en même temps, révélez les cartes, et avancez vers un consensus.
+
+    p.footer-note.ds-body-sm
+      ' Déjà inscrit ?
+      = link_to "Connectez-vous", new_user_session_path, style: "color: var(--primary);"
+      | &nbsp;pour retrouver vos parties.
