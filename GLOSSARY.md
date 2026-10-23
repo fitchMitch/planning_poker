@@ -16,8 +16,12 @@ A specific instance of a GameType being played by a group of Participants. Ident
 _Avoid_: Partie, Session, Room
 
 **User**:
-An account registered on the Platform.
+An account registered on the Platform. Has a site-wide Role: Admin or Member.
 _Avoid_: Player, Account
+
+**Role**:
+A User's site-wide administration level: Admin or Member. Independent from Creator and Participant, which are Game-scoped distinctions on a different field.
+_Avoid_: Player (reserved for a future GameType-specific role, e.g. Player vs Spectator in Planning Poker)
 
 **Participant**:
 A User taking part in a specific Game.
