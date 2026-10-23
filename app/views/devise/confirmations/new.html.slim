@@ -1,13 +1,15 @@
-h2 Renvoyer les instructions de confirmation
+.ds-card.ds-root
+  h2.ds-heading-lg Renvoyer les instructions de confirmation
 
-= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
-  = render "devise/shared/error_messages", resource: resource
+  = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+    = render "devise/shared/error_messages", resource: resource
 
-  .field
-    p = f.label :email, "E-mail"
-    p = f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email)
+    .ds-field
+      = f.label :email, "E-mail", class: "ds-label"
+      = f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "ds-input"
 
-  .actions
-    = f.submit "Renvoyer les instructions de confirmation"
+    .ds-actions
+      = f.submit "Renvoyer les instructions de confirmation", class: "ds-btn ds-btn-primary"
 
-= render "devise/shared/links"
+  .ds-links
+    = render "devise/shared/links"

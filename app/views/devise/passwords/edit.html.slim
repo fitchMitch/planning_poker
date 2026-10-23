@@ -1,22 +1,22 @@
-h2 Changer de mot de passe
+.ds-card.ds-root
+  h2.ds-heading-lg Changer de mot de passe
 
-= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
-  = render "devise/shared/error_messages", resource: resource
-  = f.hidden_field :reset_password_token
+  = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
+    = render "devise/shared/error_messages", resource: resource
+    = f.hidden_field :reset_password_token
 
-  .field
-    p = f.label :password, "Nouveau mot de passe"
-    - if @minimum_password_length
-      p
-        em
-          | (#{@minimum_password_length} caractères minimum)
-    p = f.password_field :password, autofocus: true, autocomplete: "new-password"
+    .ds-field
+      = f.label :password, "Nouveau mot de passe", class: "ds-label"
+      = f.password_field :password, autofocus: true, autocomplete: "new-password", class: "ds-input"
+      - if @minimum_password_length
+        span.ds-hint = "#{@minimum_password_length} caractères minimum"
 
-  .field
-    p = f.label :password_confirmation, "Confirmation du nouveau mot de passe"
-    p = f.password_field :password_confirmation, autocomplete: "new-password"
+    .ds-field
+      = f.label :password_confirmation, "Confirmation du nouveau mot de passe", class: "ds-label"
+      = f.password_field :password_confirmation, autocomplete: "new-password", class: "ds-input"
 
-  .actions
-    = f.submit "Changer mon mot de passe"
+    .ds-actions
+      = f.submit "Changer mon mot de passe", class: "ds-btn ds-btn-primary"
 
-= render "devise/shared/links"
+  .ds-links
+    = render "devise/shared/links"
