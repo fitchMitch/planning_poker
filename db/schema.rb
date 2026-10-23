@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_160913) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_151319) do
+  create_table "letter_thief_email_messages", force: :cascade do |t|
+    t.text "to"
+    t.text "from"
+    t.text "sender"
+    t.text "cc"
+    t.text "bcc"
+    t.string "subject"
+    t.text "body_text"
+    t.text "body_html"
+    t.text "headers"
+    t.string "content_type"
+    t.datetime "intercepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["intercepted_at"], name: "index_letter_thief_email_messages_on_intercepted_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -19,6 +36,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_160913) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

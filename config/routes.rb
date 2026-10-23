@@ -1,4 +1,16 @@
+ADMIN_ONLY = ->(user) { user&.admin? }
+
 Rails.application.routes.draw do
+  authenticate :user, ADMIN_ONLY do
+    mount SolidErrors::Engine, at: "/solid_errors"
+  end
+
+  if Rails.env.development?
+    authenticate :user, ADMIN_ONLY do
+      mount LetterThief::Engine, at: "/letter_thief"
+    end
+  end
+
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

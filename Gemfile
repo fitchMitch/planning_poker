@@ -62,6 +62,10 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Record sent emails in the database and browse them [https://github.com/rodibot/letter_thief]
+  gem "letter_thief"
+  gem "launchy"
 end
 
 group :test do
