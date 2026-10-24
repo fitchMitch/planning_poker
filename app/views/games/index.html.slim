@@ -23,11 +23,12 @@
         p.ds-body-sm Vous n'avez participé à aucune partie.
       - else
         - @my_games.each do |game|
-          - participant = game.participants.find_by(user: current_user)
-          - rejoinable = game.state != "ended" && participant.left_at.nil?
+          - rejoinable = game.state != "ended" && game.participants.active.exists?(user: current_user)
           .ds-card
             h3.ds-heading-md = game.name
             - if rejoinable
               = link_to "Retourner à la partie", game_path(game), class: "ds-btn ds-btn-primary"
-            - else
+            - elsif game.state == "ended"
               span.ds-hint Terminée
+            - else
+              span.ds-hint Quittée

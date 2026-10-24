@@ -27,7 +27,7 @@ class Participant < ApplicationRecord
 
   def user_has_no_other_active_game
     return if user.nil?
-    return unless user.participants.active.where.not(game_id: game_id).exists?
+    return unless user.participants.active.where.not(id: id).exists?
 
     errors.add(:user, "is already participating in another game")
   end

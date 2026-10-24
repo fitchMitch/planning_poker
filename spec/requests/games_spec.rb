@@ -119,5 +119,19 @@ RSpec.describe "Games", type: :request do
       get games_path
       expect(response).to have_http_status(:success)
     end
+
+    it "offers to rejoin a game the user left and then rejoined, instead of showing it as ended or left" do
+      user = create(:user)
+      game = create(:game, state: "in_progress")
+      create(:participant, game: game, user: user, left_at: 1.hour.ago)
+      create(:participant, game: game, user: user)
+      sign_in user
+
+      get games_path
+
+      expect(response.body).to include("Retourner à la partie")
+      expect(response.body).not_to include("Terminée")
+      expect(response.body).not_to include("Quittée")
+    end
   end
 end

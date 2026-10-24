@@ -21,6 +21,33 @@ RSpec.describe "JoinRequests", type: :request do
     expect(response).to have_http_status(:forbidden)
   end
 
+  it "rejects a user already an active participant of another game" do
+    create(:participant, user: user)
+
+    expect {
+      post game_join_requests_path(game)
+    }.not_to change(JoinRequest, :count)
+    expect(response).to have_http_status(:forbidden)
+  end
+
+  it "rejects a second request while one is already pending for the same game" do
+    create(:join_request, game: game, user: user, status: "pending")
+
+    expect {
+      post game_join_requests_path(game)
+    }.not_to change(JoinRequest, :count)
+    expect(response).to have_http_status(:forbidden)
+  end
+
+  it "rejects a request for a game that has ended" do
+    ended_game = create(:game, state: "ended")
+
+    expect {
+      post game_join_requests_path(ended_game)
+    }.not_to change(JoinRequest, :count)
+    expect(response).to have_http_status(:forbidden)
+  end
+
   describe "PATCH /join_requests/:id/accept" do
     it "lets any current active participant accept a first attempt" do
       game = create(:game)

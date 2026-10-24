@@ -33,6 +33,15 @@ RSpec.describe Participant, type: :model do
     end
   end
 
+  it "rejects a second active participation for the same user in the SAME game" do
+    game = create(:game)
+    user = create(:user)
+    create(:participant, game: game, user: user)
+    second = build(:participant, game: game, user: user)
+    expect(second).not_to be_valid
+    expect(second.errors[:user]).to include("is already participating in another game")
+  end
+
   it "allows a user to join a new game once they've left their previous one" do
     user = create(:user)
     old_game = create(:game)
@@ -68,12 +77,14 @@ RSpec.describe Participant, type: :model do
     it "promotes a random remaining active participant to creator when the creator leaves an in_progress game with no successor given" do
       game = create(:game, state: "in_progress")
       creator = create(:participant, game: game, creator: true)
-      other = create(:participant, game: game)
+      other_one = create(:participant, game: game)
+      other_two = create(:participant, game: game)
 
       creator.leave!
 
-      expect(other.reload.creator).to eq(true)
-      expect(game.reload.state).to eq("in_progress")
+      expect([ other_one.reload.creator, other_two.reload.creator ]).to include(true)
+      expect(game.reload.participants.active.where(creator: true).count).to eq(1)
+      expect(game.state).to eq("in_progress")
     end
 
     it "promotes an explicitly given successor when the creator leaves an in_progress game" do

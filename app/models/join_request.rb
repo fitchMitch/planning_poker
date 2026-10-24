@@ -14,6 +14,10 @@ class JoinRequest < ApplicationRecord
     current_cycle_for(game: game, user: user).where(status: "rejected").count >= 2
   end
 
+  def self.pending_for?(game:, user:)
+    current_cycle_for(game: game, user: user).where(status: "pending").exists?
+  end
+
   def retry?
     self.class.current_cycle_for(game: game, user: user).where("id < ?", id).exists?
   end

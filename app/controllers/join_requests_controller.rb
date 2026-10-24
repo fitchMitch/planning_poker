@@ -5,6 +5,9 @@ class JoinRequestsController < ApplicationController
   def create
     game = Game.find(params[:game_id])
     return head :forbidden if JoinRequest.barred?(game: game, user: current_user)
+    return head :forbidden if JoinRequest.pending_for?(game: game, user: current_user)
+    return head :forbidden unless game.open?
+    return head :forbidden if current_user.current_game
 
     JoinRequest.create!(game: game, user: current_user)
     redirect_to games_path
@@ -12,10 +15,13 @@ class JoinRequestsController < ApplicationController
 
   def accept
     return head :forbidden unless authorized_to_decide?
-    return if @join_request.status != "pending"
 
-    Participant.create!(game: @join_request.game, user: @join_request.user, creator: false)
-    @join_request.update!(status: "accepted")
+    @join_request.with_lock do
+      return redirect_to game_path(@join_request.game) if @join_request.status != "pending"
+
+      Participant.create!(game: @join_request.game, user: @join_request.user, creator: false)
+      @join_request.update!(status: "accepted")
+    end
     redirect_to game_path(@join_request.game)
   rescue ActiveRecord::RecordInvalid
     @join_request.update!(status: "rejected")
@@ -24,9 +30,12 @@ class JoinRequestsController < ApplicationController
 
   def reject
     return head :forbidden unless authorized_to_decide?
-    return if @join_request.status != "pending"
 
-    @join_request.update!(status: "rejected")
+    @join_request.with_lock do
+      return redirect_to game_path(@join_request.game) if @join_request.status != "pending"
+
+      @join_request.update!(status: "rejected")
+    end
     redirect_to game_path(@join_request.game)
   end
 

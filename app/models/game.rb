@@ -8,4 +8,8 @@ class Game < ApplicationRecord
   normalizes :description, with: ->(value) { value.blank? ? nil : value }
 
   validates :name, presence: true, uniqueness: true
+
+  def open?
+    state.in?(%w[lobby in_progress])
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_000003) do
   create_table "game_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -68,6 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_000002) do
     t.datetime "left_at"
     t.index ["game_id"], name: "index_participants_on_game_id"
     t.index ["user_id"], name: "index_participants_on_user_id"
+    t.index ["user_id"], name: "index_participants_on_user_id_active", unique: true, where: "left_at IS NULL"
   end
 
   create_table "users", force: :cascade do |t|
