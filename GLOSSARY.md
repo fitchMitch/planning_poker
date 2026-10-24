@@ -12,12 +12,16 @@ A generic kind of game offered by the Platform (e.g. Planning Poker). Defines th
 _Avoid_: Game (when meaning the type rather than an instance)
 
 **Game**:
-A specific instance of a GameType being played by a group of Participants. Identified by a name, unique across the whole Platform, chosen by its Creator at creation time. Locatable by its name, by its URL, or via the public listing — but none of these grant entry directly; becoming a Participant always requires a JoinRequest.
+A specific instance of a GameType being played by a group of Participants. Identified by a name, unique across the whole Platform, chosen by its Creator at creation time. May carry a free-text Description, set by the Creator at creation time and optional. Locatable by its name, by its URL, or via the public listing — but none of these grant entry directly; becoming a Participant always requires a JoinRequest.
 _Avoid_: Partie, Session, Room
 
 **User**:
-An account registered on the Platform.
+An account registered on the Platform. Has a site-wide Role: Admin or Member.
 _Avoid_: Player, Account
+
+**Role**:
+A User's site-wide administration level: Admin or Member. Independent from Creator and Participant, which are Game-scoped distinctions on a different field.
+_Avoid_: Player (reserved for a future GameType-specific role, e.g. Player vs Spectator in Planning Poker)
 
 **Participant**:
 A User taking part in a specific Game.
@@ -36,6 +40,9 @@ The state of a Game before it has started. Participants can join and leave freel
 **InProgress**:
 The state of a Game once it has started.
 
+**Ended**:
+The state of a Game once it has no Participants left. A Game never leaves this state and is never deleted — its name stays reserved forever, so no future Game can reuse it.
+
 ## Rules
 
 - Joining a Game requires being a registered User; anonymous access is not yet decided.
@@ -43,8 +50,9 @@ The state of a Game once it has started.
 - Becoming a Participant always requires a JoinRequest, even when the Game was located by a known name or URL — there is no direct-join path.
 - A User may submit at most 2 JoinRequests per Game (1 initial attempt + 1 retry after a rejection). The initial attempt may be accepted or rejected by the Creator or any current Participant; the retry may only be accepted or rejected by the Creator. After the retry is rejected, the User is permanently barred from that Game.
 - If two decisions are recorded on the same JoinRequest near-simultaneously, the first one recorded is final; any later decision on that same request has no effect.
-- A User can be a Participant in at most one Game at a time. Attempting to join another Game while already a Participant is rejected; the User must leave their current Game first.
-- A Game's name must be unique across the whole Platform (not just within a GameType).
-- A Game is deleted when its last Participant leaves.
-- If the Creator leaves a Game that is still in the Lobby state, the Game is deleted immediately, even if other Participants remain (they are removed from the Game too).
+- A User can be a Participant in at most one Game at a time. Attempting to join another Game while already a Participant is rejected; the User must leave their current Game first. This also applies to creating a Game: a User already a Participant elsewhere cannot create a new one.
+- Creating a Game makes its Creator a Participant immediately, with no JoinRequest — the JoinRequest requirement applies to joining an existing Game, not to the act of creating one.
+- A Game's name must be unique across the whole Platform (not just within a GameType), forever — even once the Game has Ended, its name cannot be reused by a new Game.
+- A Game moves to the Ended state when its last Participant leaves. It is never deleted.
+- If the Creator leaves a Game that is still in the Lobby state, the Game moves to Ended immediately, even if other Participants remain (they are removed from the Game too).
 - If the Creator leaves a Game that is InProgress, they must delegate the Creator role to another Participant. If delegated explicitly as part of leaving, that Participant becomes Creator immediately; otherwise, after a timeout, the Creator role is assigned at random among the remaining Participants.

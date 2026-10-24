@@ -1,20 +1,22 @@
-h2 Se connecter
+.ds-card.ds-root
+  h2.ds-heading-lg Se connecter
 
-= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-  .field
-    p = f.label :email, "E-mail"
-    p = f.email_field :email, autofocus: true, autocomplete: "email"
+  = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+    .ds-field
+      = f.label :email, "E-mail", class: "ds-label"
+      = f.email_field :email, autofocus: true, autocomplete: "email", class: "ds-input"
 
-  .field
-    p = f.label :password, "Mot de passe"
-    p = f.password_field :password, autocomplete: "current-password"
+    .ds-field
+      = f.label :password, "Mot de passe", class: "ds-label"
+      = f.password_field :password, autocomplete: "current-password", class: "ds-input"
 
-  - if devise_mapping.rememberable?
-    .field
-      p = f.check_box :remember_me
-      p = f.label :remember_me, "Se souvenir de moi"
+    - if devise_mapping.rememberable?
+      .ds-checkbox-row.ds-field
+        = f.check_box :remember_me
+        = f.label :remember_me, "Se souvenir de moi", class: "ds-label"
 
-  .actions
-    = f.submit "Se connecter"
+    .ds-actions
+      = f.submit "Se connecter", class: "ds-btn ds-btn-primary"
 
-= render "devise/shared/links"
+  .ds-links
+    = render "devise/shared/links"
