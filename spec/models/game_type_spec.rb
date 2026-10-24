@@ -8,15 +8,15 @@ RSpec.describe GameType, type: :model do
   end
 
   it "requires a unique name" do
-    create(:game_type)
-    dup = build(:game_type, slug: "other")
+    existing = create(:game_type)
+    dup = build(:game_type, name: existing.name, slug: "other")
     expect(dup).not_to be_valid
     expect(dup.errors[:name]).to include("has already been taken")
   end
 
   it "requires a unique slug" do
-    create(:game_type)
-    dup = build(:game_type, name: "Other")
+    existing = create(:game_type)
+    dup = build(:game_type, name: "Other", slug: existing.slug)
     expect(dup).not_to be_valid
     expect(dup.errors[:slug]).to include("has already been taken")
   end

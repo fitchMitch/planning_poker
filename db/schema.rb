@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_000003) do
   create_table "game_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -30,6 +30,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000003) do
     t.datetime "updated_at", null: false
     t.index ["game_type_id"], name: "index_games_on_game_type_id"
     t.index ["name"], name: "index_games_on_name", unique: true
+  end
+
+  create_table "join_requests", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_join_requests_on_game_id"
+    t.index ["user_id"], name: "index_join_requests_on_user_id"
   end
 
   create_table "letter_thief_email_messages", force: :cascade do |t|
@@ -55,8 +65,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000003) do
     t.boolean "creator", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "left_at"
     t.index ["game_id"], name: "index_participants_on_game_id"
     t.index ["user_id"], name: "index_participants_on_user_id"
+    t.index ["user_id"], name: "index_participants_on_user_id_active", unique: true, where: "left_at IS NULL"
   end
 
   create_table "users", force: :cascade do |t|
@@ -73,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000003) do
   end
 
   add_foreign_key "games", "game_types"
+  add_foreign_key "join_requests", "games"
+  add_foreign_key "join_requests", "users"
   add_foreign_key "participants", "games"
   add_foreign_key "participants", "users"
 end

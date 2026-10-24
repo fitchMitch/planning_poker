@@ -27,4 +27,15 @@ Rails.application.routes.draw do
   resources :game_types, only: [ :index, :show ], param: :slug do
     resources :games, only: [ :new, :create ]
   end
+
+  resources :games, only: [ :index, :show ] do
+    resources :join_requests, only: [ :create ]
+    post "leave", on: :member
+    post "heartbeat", on: :member, to: "heartbeats#create"
+  end
+
+  resources :join_requests, only: [] do
+    patch "accept", on: :member
+    patch "reject", on: :member
+  end
 end
