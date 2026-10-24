@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :games, only: [ :index, :show ] do
     resources :join_requests, only: [ :create ]
     post "leave", on: :member
+    post "heartbeat", on: :member, to: "heartbeats#create"
   end
 
   resources :join_requests, only: [] do
