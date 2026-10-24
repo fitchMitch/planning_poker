@@ -52,7 +52,3 @@ end
 Then("the {string} button should be disabled") do |label|
   assert page.has_css?("span.ds-btn[disabled]", text: label)
 end
-
-Then("only 1 game named {string} should exist") do |name|
-  assert_equal 1, Game.where(name: name).count
-end

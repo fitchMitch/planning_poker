@@ -16,8 +16,7 @@ Feature: Game creation
   Scenario: A member cannot create a game with a name already taken
     Given a game named "Sprint 44" exists for the Planning Poker game type
     When I create a game named "Sprint 44"
-    Then I should see "Créer une partie"
-    And only 1 game named "Sprint 44" should exist
+    Then I should see "has already been taken"
 
   Scenario: A member already in a game cannot create another one
     Given I am already participating in a game named "Sprint 45"

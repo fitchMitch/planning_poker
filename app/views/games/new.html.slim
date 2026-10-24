@@ -2,6 +2,8 @@
   h1.ds-heading-lg Créer une partie
 
   = form_for @game, url: game_type_games_path(@game_type.slug) do |f|
+    = render "devise/shared/error_messages", resource: @game
+
     .ds-field
       = f.label :name, "Nom de la partie", class: "ds-label"
       = f.text_field :name, class: "ds-input"
