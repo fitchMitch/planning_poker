@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :participants
 
   def current_game
-    participants.first&.game
+    participants.active.first&.game
   end
 
   validate :password_complexity
