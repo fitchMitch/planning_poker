@@ -14,3 +14,11 @@ Feature: Game listing
     Given I am already participating in a game named "Sprint 51"
     When I visit the games list
     Then I should see "Sprint 51"
+
+  Scenario: A member sees an empty "Toutes les parties" when no game is open
+    When I visit the games list
+    Then I should see "Aucune partie ouverte pour le moment."
+
+  Scenario: A member sees an empty "Mes parties" when they have no participation history
+    When I visit the games list
+    Then I should see "Vous n'avez participé à aucune partie."
