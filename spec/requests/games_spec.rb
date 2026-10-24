@@ -52,9 +52,13 @@ RSpec.describe "Games", type: :request do
 
     it "does nothing if the user is not a participant of that game" do
       game = create(:game)
+      other_participant = create(:participant, game: game)
       sign_in create(:user)
 
-      expect { post leave_game_path(game) }.not_to raise_error
+      post leave_game_path(game)
+
+      expect(response).to redirect_to(games_path)
+      expect(other_participant.reload.left_at).to be_nil
     end
   end
 end
