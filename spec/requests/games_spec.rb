@@ -39,4 +39,22 @@ RSpec.describe "Games", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
     expect(response.body).to include("Vous participez déjà à Sprint 4")
   end
+
+  describe "POST /games/:id/leave" do
+    it "lets a participant leave their game" do
+      participant = create(:participant)
+      sign_in participant.user
+
+      post leave_game_path(participant.game)
+
+      expect(participant.reload.left_at).not_to be_nil
+    end
+
+    it "does nothing if the user is not a participant of that game" do
+      game = create(:game)
+      sign_in create(:user)
+
+      expect { post leave_game_path(game) }.not_to raise_error
+    end
+  end
 end

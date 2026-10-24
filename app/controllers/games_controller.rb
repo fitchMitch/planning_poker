@@ -24,6 +24,13 @@ class GamesController < ApplicationController
     render :new, status: :unprocessable_entity
   end
 
+  def leave
+    game = Game.find(params[:id])
+    participant = game.participants.active.find_by(user: current_user)
+    participant&.leave!
+    redirect_to games_path
+  end
+
   private
 
   def game_params
