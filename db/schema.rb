@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_000003) do
   create_table "game_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -49,6 +49,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000002) do
     t.index ["intercepted_at"], name: "index_letter_thief_email_messages_on_intercepted_at"
   end
 
+  create_table "participants", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "user_id", null: false
+    t.boolean "creator", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_participants_on_game_id"
+    t.index ["user_id"], name: "index_participants_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -63,4 +73,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000002) do
   end
 
   add_foreign_key "games", "game_types"
+  add_foreign_key "participants", "games"
+  add_foreign_key "participants", "users"
 end

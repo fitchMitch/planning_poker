@@ -6,6 +6,12 @@ class User < ApplicationRecord
 
   enum :role, { member: 0, admin: 1 }
 
+  has_many :participants
+
+  def current_game
+    participants.first&.game
+  end
+
   validate :password_complexity
 
   private
