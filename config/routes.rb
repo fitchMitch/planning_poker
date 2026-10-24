@@ -32,4 +32,9 @@ Rails.application.routes.draw do
     resources :join_requests, only: [ :create ]
     post "leave", on: :member
   end
+
+  resources :join_requests, only: [] do
+    patch "accept", on: :member
+    patch "reject", on: :member
+  end
 end
