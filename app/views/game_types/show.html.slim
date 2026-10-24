@@ -6,7 +6,7 @@
         span.ds-heading-md Planning Poker
       ul.nav-links
         li: a.is-active href="#" Mes parties
-        li: a href="#" Toutes les parties
+        li: = link_to "Toutes les parties", games_path
         li
           - if current_user.current_game
             button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
@@ -27,7 +27,7 @@
           span.ds-hint Vous participez déjà à #{current_user.current_game.name}
         - else
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
-        a.ds-btn.ds-btn-secondary href="#" Parcourir les parties
+        = link_to "Parcourir les parties", games_path, class: "ds-btn ds-btn-secondary"
 
   - else
     header.nav

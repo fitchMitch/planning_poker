@@ -61,4 +61,32 @@ RSpec.describe "Games", type: :request do
       expect(other_participant.reload.left_at).to be_nil
     end
   end
+
+  describe "GET /games" do
+    it "lists open games" do
+      open_game = create(:game, state: "lobby")
+      create(:game, state: "ended")
+      sign_in create(:user)
+
+      get games_path
+
+      expect(response.body).to include(open_game.name)
+    end
+
+    it "lists the signed-in user's participation history, including left and ended games" do
+      user = create(:user)
+      past_participant = create(:participant, user: user, left_at: 1.day.ago)
+      sign_in user
+
+      get games_path
+
+      expect(response.body).to include(past_participant.game.name)
+    end
+
+    it "renders without error when there are no games at all" do
+      sign_in create(:user)
+      get games_path
+      expect(response).to have_http_status(:success)
+    end
+  end
 end

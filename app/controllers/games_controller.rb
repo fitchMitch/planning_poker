@@ -1,6 +1,11 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
 
+  def index
+    @open_games = Game.open
+    @my_games = Game.joins(:participants).where(participants: { user: current_user }).distinct
+  end
+
   def new
     @game_type = GameType.find_by!(slug: params[:game_type_slug])
     @game = Game.new

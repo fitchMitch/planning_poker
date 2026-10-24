@@ -1,0 +1,33 @@
+.ds-root
+  h1.ds-heading-xl Les parties
+
+  .games-columns
+    section
+      h2.ds-heading-lg Toutes les parties
+      - if @open_games.none?
+        p.ds-body-sm Aucune partie ouverte pour le moment.
+      - else
+        - @open_games.each do |game|
+          .ds-card
+            h3.ds-heading-md = game.name
+            p.ds-body-sm = game.description
+            - pending = JoinRequest.exists?(game: game, user: current_user, status: "pending")
+            - if pending
+              button.ds-btn.ds-btn-secondary type="button" disabled=true En attente
+            - else
+              = button_to "Demander à rejoindre", game_join_requests_path(game), class: "ds-btn ds-btn-primary"
+
+    section
+      h2.ds-heading-lg Mes parties
+      - if @my_games.none?
+        p.ds-body-sm Vous n'avez participé à aucune partie.
+      - else
+        - @my_games.each do |game|
+          - participant = game.participants.find_by(user: current_user)
+          - rejoinable = game.state != "ended" && participant.left_at.nil?
+          .ds-card
+            h3.ds-heading-md = game.name
+            - if rejoinable
+              = link_to "Retourner à la partie", game_path(game), class: "ds-btn ds-btn-primary"
+            - else
+              span.ds-hint Terminée
