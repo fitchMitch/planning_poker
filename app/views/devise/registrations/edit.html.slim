@@ -1,0 +1,41 @@
+.ds-card.ds-root
+  h2.ds-heading-lg Modifier mon compte
+
+  = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+    = render "devise/shared/error_messages", resource: resource
+
+    .ds-field
+      = f.label :email, "E-mail", class: "ds-label"
+      = f.email_field :email, autofocus: true, autocomplete: "email", class: "ds-input"
+
+    - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+      p.ds-hint En attente de confirmation pour : #{resource.unconfirmed_email}
+
+    .ds-field
+      = f.label :password, "Nouveau mot de passe", class: "ds-label"
+      = f.password_field :password, autocomplete: "new-password", class: "ds-input"
+      span.ds-hint
+        | (laisser vide pour ne pas le changer)
+        - if @minimum_password_length
+          |  — #{@minimum_password_length} caractères minimum
+
+    .ds-field
+      = f.label :password_confirmation, "Confirmation du nouveau mot de passe", class: "ds-label"
+      = f.password_field :password_confirmation, autocomplete: "new-password", class: "ds-input"
+
+    .ds-field
+      = f.label :current_password, "Mot de passe actuel", class: "ds-label"
+      = f.password_field :current_password, autocomplete: "current-password", class: "ds-input"
+      span.ds-hint (nécessaire pour confirmer vos changements)
+
+    .ds-actions
+      = f.submit "Mettre à jour", class: "ds-btn ds-btn-primary"
+
+  h3.ds-heading-md Supprimer mon compte
+
+  .ds-actions
+    span.ds-body-sm Vous souhaitez partir ?
+    = button_to "Supprimer mon compte", registration_path(resource_name), data: { confirm: "Êtes-vous sûr ?", turbo_confirm: "Êtes-vous sûr ?" }, method: :delete, class: "ds-btn ds-btn-secondary"
+
+  .ds-links
+    = link_to "Retour", request.referer || root_path

@@ -79,6 +79,7 @@ GEM
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.3)
     bindex (0.8.1)
@@ -99,9 +100,11 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
-    crass (1.0.7)
+    crass (1.0.8)
     cucumber (11.1.1)
       base64 (~> 0.2)
       builder (~> 3.2)
@@ -139,6 +142,12 @@ GEM
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    devise (5.0.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 7.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.6.2)
     dotenv (3.2.0)
     drb (2.2.3)
@@ -147,6 +156,11 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.2)
       tzinfo
+    factory_bot (6.6.0)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
     ffi (1.17.4-arm-linux-gnu)
@@ -189,6 +203,12 @@ GEM
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
     language_server-protocol (3.17.0.6)
+    launchy (3.1.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+      logger (~> 1.6)
+    letter_thief (0.5.0)
+      rails (>= 7.0)
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.25.2)
@@ -238,6 +258,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-musl)
       racc (~> 1.4)
+    orm_adapter (0.5.0)
     ostruct (0.6.3)
     parallel (2.3.0)
     parser (3.3.12.0)
@@ -308,6 +329,26 @@ GEM
     regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
+    responders (3.2.0)
+      actionpack (>= 7.0)
+      railties (>= 7.0)
+    rspec-core (3.13.6)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.8)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (8.0.4)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (>= 3.13.0, < 5.0.0)
+      rspec-expectations (>= 3.13.0, < 5.0.0)
+      rspec-mocks (>= 3.13.0, < 5.0.0)
+      rspec-support (>= 3.13.0, < 5.0.0)
+    rspec-support (3.13.7)
     rubocop (1.92.0)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -357,6 +398,12 @@ GEM
       activejob (>= 7.2)
       activerecord (>= 7.2)
       railties (>= 7.2)
+    solid_errors (0.9.1)
+      actionpack (>= 7.1)
+      actionview (>= 7.1)
+      activerecord (>= 7.1)
+      activesupport (>= 7.1)
+      railties (>= 7.1)
     solid_queue (1.7.0)
       activejob (>= 7.1)
       activerecord (>= 7.1)
@@ -400,6 +447,8 @@ GEM
     unicode-emoji (4.3.0)
     uri (1.1.2)
     useragent (0.16.11)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     web-console (4.3.0)
       actionview (>= 8.0.0)
       bindex (>= 0.4.0)
@@ -430,17 +479,23 @@ DEPENDENCIES
   cucumber-rails
   database_cleaner-active_record
   debug
+  devise
+  factory_bot_rails
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
   kamal
+  launchy
+  letter_thief
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.3)
+  rspec-rails
   rubocop-rails-omakase
   slim-rails
   solid_cable
   solid_cache
+  solid_errors
   solid_queue
   sqlite3 (>= 2.1)
   stimulus-rails

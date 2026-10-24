@@ -1,0 +1,68 @@
+/* Oscar's Games — base component styles, copied from the design system's bundle.css.
+   https://claude.ai/artifact/SSVz6QwRJGzwsFuX6vaaoA
+   Specs for each component: docs/design-system/components/*.md */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.ds-root {
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--surface-100);
+}
+
+.ds-root :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 44px;
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.ds-btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.ds-btn-primary:hover { background: var(--primary-strong); }
+
+.ds-btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--border);
+}
+
+.ds-btn-secondary:hover { background: var(--surface-300); }
+
+.ds-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ds-card {
+  background: var(--surface-200);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+}
+
+/* Type styles, from tokens.json "type.groups" */
+
+.ds-heading-xl { font: 700 32px/40px var(--sans); }
+.ds-heading-lg { font: 700 24px/32px var(--sans); }
+.ds-heading-md { font: 600 18px/26px var(--sans); }
+.ds-body       { font: 400 16px/24px var(--sans); }
+.ds-body-sm    { font: 400 14px/20px var(--sans); }
+.ds-label      { font: 600 13px/18px var(--sans); }

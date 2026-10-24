@@ -1,0 +1,77 @@
+/* Oscar's Games — design tokens. Generated from the design system's tokens.json.
+   https://claude.ai/artifact/SSVz6QwRJGzwsFuX6vaaoA
+   Do not hand-edit values here; change tokens.json in the design system and regenerate. */
+
+:root {
+  --surface-100: #f7f5f0;
+  --surface-200: #ffffff;
+  --surface-300: #edeae2;
+  --border: #d8d2c4;
+  --ink: #20242a;
+  --ink-muted: #565f68;
+  --primary: #0f6e66;
+  --primary-strong: #0b544e;
+  --on-primary: #ffffff;
+  --accent: #b5650a;
+  --on-accent: #ffffff;
+  --success: #1c7a4b;
+  --on-success: #ffffff;
+  --danger: #a3311f;
+  --on-danger: #ffffff;
+  --focus-ring: #0f6e66;
+
+  --sans: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --space-2: 4px;
+  --space-4: 8px;
+  --space-6: 12px;
+  --space-8: 16px;
+  --space-12: 24px;
+  --space-16: 32px;
+  --space-24: 48px;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-100: #15191c;
+    --surface-200: #1e2328;
+    --surface-300: #262c32;
+    --border: #333a41;
+    --ink: #eef1f4;
+    --ink-muted: #a7b0b8;
+    --primary: #4fb8ad;
+    --primary-strong: #78cec3;
+    --on-primary: #06201d;
+    --accent: #e8a24c;
+    --on-accent: #2a1700;
+    --success: #5fcf93;
+    --on-success: #062314;
+    --danger: #ef8a73;
+    --on-danger: #330d05;
+    --focus-ring: #78cec3;
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface-100: #15191c;
+  --surface-200: #1e2328;
+  --surface-300: #262c32;
+  --border: #333a41;
+  --ink: #eef1f4;
+  --ink-muted: #a7b0b8;
+  --primary: #4fb8ad;
+  --primary-strong: #78cec3;
+  --on-primary: #06201d;
+  --accent: #e8a24c;
+  --on-accent: #2a1700;
+  --success: #5fcf93;
+  --on-success: #062314;
+  --danger: #ef8a73;
+  --on-danger: #330d05;
+  --focus-ring: #78cec3;
+}

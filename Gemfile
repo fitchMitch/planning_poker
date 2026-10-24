@@ -18,6 +18,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 # Slim templates for HTML views [https://github.com/slim-template/slim-rails]
 gem "slim-rails"
+# Flexible authentication solution [https://github.com/heartcombo/devise]
+gem "devise"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -29,6 +31,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
+gem "solid_errors"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -46,6 +49,12 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
+  # RSpec test framework [https://github.com/rspec/rspec-rails]
+  gem "rspec-rails"
+
+  # Factories instead of fixtures [https://github.com/thoughtbot/factory_bot_rails]
+  gem "factory_bot_rails"
+
   # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
   gem "bundler-audit", require: false
 
@@ -59,6 +68,10 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Record sent emails in the database and browse them [https://github.com/rodibot/letter_thief]
+  gem "letter_thief"
+  gem "launchy"
 end
 
 group :test do

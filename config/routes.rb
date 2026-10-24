@@ -1,4 +1,17 @@
+ADMIN_ONLY = ->(user) { user&.admin? }
+
 Rails.application.routes.draw do
+  authenticate :user, ADMIN_ONLY do
+    mount SolidErrors::Engine, at: "/solid_errors"
+  end
+
+  if Rails.env.development?
+    authenticate :user, ADMIN_ONLY do
+      mount LetterThief::Engine, at: "/letter_thief"
+    end
+  end
+
+  devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,5 +23,8 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "game_types#index"
+  resources :game_types, only: [ :index, :show ], param: :slug do
+    resources :games, only: [ :new, :create ]
+  end
 end
