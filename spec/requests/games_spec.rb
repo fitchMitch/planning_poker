@@ -30,12 +30,13 @@ RSpec.describe "Games", type: :request do
   end
 
   it "rejects creation when the user already has an active game" do
-    existing = create(:game, game_type: game_type)
+    existing = create(:game, game_type: game_type, name: "Sprint 4")
     create(:participant, game: existing, user: user, creator: true)
 
     expect {
       post game_type_games_path(game_type.slug), params: { game: { name: "Sprint 5" } }
     }.not_to change(Game, :count)
     expect(response).to have_http_status(:unprocessable_entity)
+    expect(response.body).to include("Vous participez déjà à Sprint 4")
   end
 end

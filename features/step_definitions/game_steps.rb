@@ -50,5 +50,11 @@ When("I create a game named {string} with description {string}") do |name, descr
 end
 
 Then("the {string} button should be disabled") do |label|
-  assert page.has_css?("span.ds-btn[disabled]", text: label)
+  assert page.has_button?(label, disabled: true)
+end
+
+When("I try to create a game named {string}") do |name|
+  visit new_game_type_game_path("planning-poker")
+  fill_in "Nom de la partie", with: name
+  click_button "Créer"
 end

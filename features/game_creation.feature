@@ -23,3 +23,8 @@ Feature: Game creation
     When I visit the Planning Poker game type page
     Then the "Créer une partie" button should be disabled
     And I should see "Vous participez déjà à Sprint 45"
+
+  Scenario: A member already in a game sees an error when forcing the creation form
+    Given I am already participating in a game named "Sprint 46"
+    When I try to create a game named "Sprint 47"
+    Then I should see "Vous participez déjà à Sprint 46"

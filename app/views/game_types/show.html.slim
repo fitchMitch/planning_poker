@@ -9,7 +9,7 @@
         li: a href="#" Toutes les parties
         li
           - if current_user.current_game
-            span.ds-btn.ds-btn-primary disabled="disabled" Créer une partie
+            button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
             span.ds-hint Vous participez déjà à #{current_user.current_game.name}
           - else
             = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
@@ -23,7 +23,7 @@
       p.ds-body.lede Prête à estimer ? Créez une nouvelle partie ou rejoignez-en une déjà en cours.
       .hero-actions
         - if current_user.current_game
-          span.ds-btn.ds-btn-primary disabled="disabled" Créer une partie
+          button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
           span.ds-hint Vous participez déjà à #{current_user.current_game.name}
         - else
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"

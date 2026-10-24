@@ -10,6 +10,11 @@ class GamesController < ApplicationController
     @game_type = GameType.find_by!(slug: params[:game_type_slug])
     @game = Game.new(game_params.merge(game_type: @game_type))
 
+    if current_user.current_game
+      @game.errors.add(:base, "Vous participez déjà à #{current_user.current_game.name}")
+      return render :new, status: :unprocessable_entity
+    end
+
     ActiveRecord::Base.transaction do
       @game.save!
       Participant.create!(game: @game, user: current_user, creator: true)
