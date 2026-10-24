@@ -1,0 +1,12 @@
+.ds-root
+  h1.ds-heading-lg Créer une partie
+
+  = form_for @game, url: game_type_games_path(@game_type.slug) do |f|
+    .ds-field
+      = f.label :name, "Nom de la partie", class: "ds-label"
+      = f.text_field :name, class: "ds-input"
+    .ds-field
+      = f.label :description, "Description (optionnel)", class: "ds-label"
+      = f.text_area :description, class: "ds-input"
+    .ds-actions
+      = f.submit "Créer", class: "ds-btn ds-btn-primary"
