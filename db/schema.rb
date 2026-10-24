@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_151319) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_000001) do
+  create_table "game_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_game_types_on_name", unique: true
+    t.index ["slug"], name: "index_game_types_on_slug", unique: true
+  end
+
   create_table "letter_thief_email_messages", force: :cascade do |t|
     t.text "to"
     t.text "from"
