@@ -24,7 +24,7 @@ A User's site-wide administration level: Admin or Member. Independent from Creat
 _Avoid_: Player (reserved for a future GameType-specific role, e.g. Player vs Spectator in Planning Poker)
 
 **Participant**:
-A User taking part in a specific Game.
+A User taking part in a specific Game. A Participant who has left remains on record — becoming a past Participant — so a User's participation history in a Game is never lost; "taking part" means an active Participant specifically (one who has not left).
 _Avoid_: Player (reserved for a future GameType-specific role, e.g. Player vs Spectator in Planning Poker)
 
 **Creator**:
@@ -56,3 +56,4 @@ The state of a Game once it has no Participants left. A Game never leaves this s
 - A Game moves to the Ended state when its last Participant leaves. It is never deleted.
 - If the Creator leaves a Game that is still in the Lobby state, the Game moves to Ended immediately, even if other Participants remain (they are removed from the Game too).
 - If the Creator leaves a Game that is InProgress, they must delegate the Creator role to another Participant. If delegated explicitly as part of leaving, that Participant becomes Creator immediately; otherwise, after a timeout, the Creator role is assigned at random among the remaining Participants.
+- A Participant judged inactive for too long leaves automatically — this is the same leaving as an explicit departure, with the same consequences (Game moves to Ended if they were the last Participant; Creator delegation rules apply if they were the Creator), just triggered by the Platform instead of the User.
