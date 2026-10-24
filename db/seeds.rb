@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+GameType.find_or_create_by!(slug: "planning-poker") do |game_type|
+  game_type.name = "Planning Poker"
+  game_type.description = "Estimez vos tickets en équipe, en temps réel, par un vote collectif à l'aveugle."
+end
