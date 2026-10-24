@@ -22,4 +22,17 @@ RSpec.describe "GameTypes", type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe "GET /game_types/:slug recent games preview" do
+    it "shows up to 5 of the game type's most recently created games" do
+      game_type = create(:game_type)
+      6.times { |n| create(:game, game_type: game_type, name: "Game #{n}") }
+      sign_in create(:user)
+
+      get game_type_path(game_type.slug)
+
+      expect(response.body).to include("Game 5") # most recent
+      expect(response.body).not_to include("Game 0") # 6th-oldest, excluded
+    end
+  end
 end

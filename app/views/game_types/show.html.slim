@@ -29,6 +29,13 @@
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
         = link_to "Parcourir les parties", games_path, class: "ds-btn ds-btn-secondary"
 
+    section
+      h2.ds-heading-lg Parties récentes
+      - @recent_games.each do |game|
+        .ds-card
+          span.ds-body-sm = game.name
+      = link_to "Voir toutes les parties", games_path, class: "ds-btn ds-btn-secondary"
+
   - else
     header.nav
       .nav-brand
