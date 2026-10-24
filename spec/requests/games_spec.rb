@@ -62,6 +62,37 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "GET /games/:id" do
+    it "shows the game to one of its active participants" do
+      participant = create(:participant)
+      sign_in participant.user
+
+      get game_path(participant.game)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(participant.game.name)
+    end
+
+    it "redirects a non-participant away" do
+      game = create(:game)
+      sign_in create(:user)
+
+      get game_path(game)
+
+      expect(response).to redirect_to(games_path)
+    end
+
+    it "shows pending join requests to an active participant" do
+      participant = create(:participant)
+      join_request = create(:join_request, game: participant.game)
+      sign_in participant.user
+
+      get game_path(participant.game)
+
+      expect(response.body).to include(join_request.user.email)
+    end
+  end
+
   describe "GET /games" do
     it "lists open games" do
       open_game = create(:game, state: "lobby")

@@ -29,6 +29,15 @@ class GamesController < ApplicationController
     render :new, status: :unprocessable_entity
   end
 
+  def show
+    @game = Game.find(params[:id])
+    @current_participant = @game.participants.active.find_by(user: current_user)
+    return redirect_to(games_path) unless @current_participant
+
+    @participants = @game.participants.active
+    @pending_join_requests = @game.join_requests.where(status: "pending")
+  end
+
   def leave
     game = Game.find(params[:id])
     participant = game.participants.active.find_by(user: current_user)
