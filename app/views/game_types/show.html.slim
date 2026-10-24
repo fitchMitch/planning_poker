@@ -5,7 +5,7 @@
         .nav-logo PP
         span.ds-heading-md Planning Poker
       ul.nav-links
-        li: a.is-active href="#" Mes parties
+        li: = link_to "Mes parties", games_path
         li: = link_to "Toutes les parties", games_path
         li
           - if current_user.current_game
