@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_000002) do
   create_table "game_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -19,6 +19,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000001) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_game_types_on_name", unique: true
     t.index ["slug"], name: "index_game_types_on_slug", unique: true
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer "game_type_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.string "state", default: "lobby", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_type_id"], name: "index_games_on_game_type_id"
+    t.index ["name"], name: "index_games_on_name", unique: true
   end
 
   create_table "letter_thief_email_messages", force: :cascade do |t|
@@ -50,4 +61,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_000001) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "games", "game_types"
 end
