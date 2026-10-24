@@ -27,4 +27,9 @@ Rails.application.routes.draw do
   resources :game_types, only: [ :index, :show ], param: :slug do
     resources :games, only: [ :new, :create ]
   end
+
+  resources :games, only: [ :index, :show ] do
+    resources :join_requests, only: [ :create ]
+    post "leave", on: :member
+  end
 end
