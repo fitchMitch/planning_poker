@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GameTypes", type: :request do
-  let!(:game_type) { create(:game_type) }
+  let!(:game_type) { create(:game_type, name: "Planning Poker", slug: "planning-poker") }
 
   describe "GET /" do
     it "lists game types" do
