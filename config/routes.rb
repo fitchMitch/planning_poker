@@ -25,10 +25,14 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "game_types#index"
   resources :game_types, only: [ :index, :show ], param: :slug do
-    resources :games, only: [ :new, :create, :index ]
+    resources :games, only: [ :new, :create, :index ] do
+      collection do
+        get "mine"
+      end
+    end
   end
 
-  resources :games, only: [ :show ] do
+  resources :games, only: [ :show, :update ] do
     resources :join_requests, only: [ :create ]
     post "leave", on: :member
     post "heartbeat", on: :member, to: "heartbeats#create"

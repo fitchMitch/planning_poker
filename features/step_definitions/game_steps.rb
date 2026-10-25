@@ -17,7 +17,7 @@ When("I visit the home page") do
 end
 
 When("I click on {string}") do |text|
-  within(".ds-card", text: text) { click_link "Voir" }
+  within(".ds-card", text: text) { click_link "Participer" }
 end
 
 When("I visit the Planning Poker game type page") do

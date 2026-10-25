@@ -13,7 +13,10 @@
       .hero-actions
         - if current_user.current_game
           button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
-          span.ds-hint Vous participez déjà à #{current_user.current_game.name}
+          span.ds-hint.ds-hint--game
+            | ℹ️ Vous participez déjà à
+            br
+            span.ds-hint-game-name = current_user.current_game.name
         - else
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
         = link_to "Parcourir les parties", game_type_games_path(@game_type.slug), class: "ds-btn ds-btn-secondary"

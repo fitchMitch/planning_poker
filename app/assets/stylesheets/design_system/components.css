@@ -116,6 +116,10 @@ body {
   gap: var(--space-8);
 }
 
+.ds-card-list + .ds-btn {
+  margin-top: var(--space-8);
+}
+
 .ds-hint {
   display: block;
   font: 400 13px/18px var(--sans);
@@ -153,6 +157,24 @@ body {
   margin-left: var(--space-8);
 }
 
+.ds-hint--spaced {
+  margin-bottom: var(--space-8);
+}
+
+.ds-hint--game {
+  font: 400 14px/20px var(--sans);
+  max-width: 220px;
+}
+
+.ds-hint-game-name {
+  display: block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
 .ds-input {
   display: block;
   width: 100%;
@@ -186,6 +208,16 @@ body {
 }
 
 .ds-password-row .ds-input {
+  flex: 1;
+}
+
+.ds-description-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+.ds-description-row p {
   flex: 1;
 }
 
@@ -257,6 +289,14 @@ body {
 .ds-error-list ul { margin: 0; padding-left: var(--space-12); }
 
 .ds-error-list li { font: 400 14px/20px var(--sans); color: var(--danger); }
+
+.ds-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
 
 /* Type styles, from tokens.json "type.groups" */
 

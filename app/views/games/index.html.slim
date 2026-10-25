@@ -1,25 +1,27 @@
 .ds-root
   = render "shared/nav", game_type: @game_type
   .page
-    h1.ds-heading-xl Les parties
+    h1.ds-heading-xl Toutes les parties
 
-    .games-columns
-      section
-        h2.ds-heading-lg Toutes les parties
-        - if @open_games.none?
-          p.ds-body-sm Aucune partie ouverte pour le moment.
-        - else
-          .ds-card-list
-            - @open_games.each do |game|
-              .ds-card
-                h3.ds-heading-md = game.name
-                - if game.creator && game.creator != current_user
-                  span.ds-hint = "Créateur : #{game.creator.email}"
-                p.ds-body-sm = game.description
-                - pending = JoinRequest.pending_for?(game: game, user: current_user)
-                - if pending
-                  button.ds-btn.ds-btn-secondary type="button" disabled=true En attente
-                - else
-                  = button_to "Demander à rejoindre", game_join_requests_path(game), class: "ds-btn ds-btn-primary"
+    - if @open_games.none?
+      p.ds-body-sm Aucune partie ouverte pour le moment.
+    - else
+      .ds-card-list
+        - @open_games.each do |game|
+          .ds-card
+            h3.ds-heading-md = game.name
+            - if game.creator && game.creator != current_user
+              span.ds-hint = "Créateur : #{game.creator.email}"
+            p.ds-body-sm = game.description
+            - pending = JoinRequest.pending_for?(game: game, user: current_user)
+            - if current_user.current_game == game
+              span.ds-hint.ds-hint--spaced En cours
+              = link_to "Retourner à la partie", game_path(game), class: "ds-btn ds-btn-primary"
+            - elsif current_user.current_game
+              span.ds-hint ℹ️ Vous participez déjà à #{current_user.current_game.name}
+            - elsif pending
+              button.ds-btn.ds-btn-secondary type="button" disabled=true En attente
+            - else
+              = button_to "Demander à rejoindre", game_join_requests_path(game), class: "ds-btn ds-btn-primary"
 
-      = render "shared/my_games", my_games: @my_games
+      = render "shared/pagination", page: @page, total_pages: @total_pages

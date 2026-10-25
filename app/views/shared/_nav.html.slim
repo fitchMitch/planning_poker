@@ -4,7 +4,7 @@ header.nav data-controller="nav"
     span.ds-heading-md Oscar's Games
   ul.nav-links data-nav-target="links"
     li
-      = link_to "Mes parties", game_type_games_path(game_type.slug)
+      = link_to "Mes parties", mine_game_type_games_path(game_type.slug)
     li
       = link_to "Toutes les parties", game_type_games_path(game_type.slug)
     li

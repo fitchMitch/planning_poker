@@ -139,6 +139,7 @@
 
 .hero-actions {
   display: flex;
+  align-items: center;
   gap: var(--space-8);
   justify-content: center;
   flex-wrap: wrap;
@@ -191,6 +192,8 @@
 }
 
 .page {
+  max-width: 880px;
+  margin: 0 auto;
   padding: var(--space-16);
 }
 
