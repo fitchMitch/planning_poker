@@ -90,6 +90,8 @@ body {
 
 .ds-card--auth {
   width: 33%;
+  min-width: 280px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -176,6 +178,41 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-4);
+}
+
+.ds-password-row {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.ds-password-row .ds-input {
+  flex: 1;
+}
+
+.ds-requirements {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-requirements li {
+  font: 400 13px/18px var(--sans);
+  color: var(--ink-muted);
+}
+
+.ds-requirements li::before {
+  content: "○ ";
+}
+
+.ds-requirements li.ds-requirement--met {
+  color: var(--success);
+}
+
+.ds-requirements li.ds-requirement--met::before {
+  content: "✓ ";
 }
 
 .ds-checkbox-row > .ds-label { margin: 0; }

@@ -1,4 +1,5 @@
-.ds-card.ds-root
+.ds-card.ds-card--auth.ds-root
+  h1.ds-heading-xl Oscar's Games
   h2.ds-heading-lg S'inscrire
 
   = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
@@ -8,11 +9,17 @@
       = f.label :email, "E-mail", class: "ds-label"
       = f.email_field :email, autofocus: true, autocomplete: "email", class: "ds-input"
 
-    .ds-field
+    .ds-field data-controller="password"
       = f.label :password, "Mot de passe", class: "ds-label"
-      = f.password_field :password, autocomplete: "new-password", class: "ds-input"
+      .ds-password-row
+        = f.password_field :password, autocomplete: "new-password", class: "ds-input", data: { password_target: "input", action: "input->password#check" }
+        button.ds-btn.ds-btn-secondary type="button" data-password-target="toggle" data-action="click->password#toggle" Afficher
       - if @minimum_password_length
         span.ds-hint = "#{@minimum_password_length} caractères minimum"
+      ul.ds-requirements
+        li data-password-target="lowercase" Une minuscule
+        li data-password-target="uppercase" Une majuscule
+        li data-password-target="digit" Un chiffre
 
     .ds-field
       = f.label :password_confirmation, "Confirmation du mot de passe", class: "ds-label"

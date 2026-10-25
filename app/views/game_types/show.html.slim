@@ -54,7 +54,7 @@
       p.ds-body.lede
         | Planning Poker réunit votre équipe autour d'une estimation collective en temps réel. Créez une partie, invitez vos collègues, votez.
       .hero-actions
-        a.ds-btn.ds-btn-primary href="#" Créer une partie
+        = link_to "Créer une partie", new_user_session_path, class: "ds-btn ds-btn-primary"
         = link_to "Voir comment ça marche", "#", class: "ds-btn ds-btn-secondary"
 
     section.how aria-label="Comment ça marche"
