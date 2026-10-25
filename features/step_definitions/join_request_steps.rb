@@ -2,6 +2,10 @@ When("I visit the games list") do
   visit game_type_games_path("planning-poker")
 end
 
+When("I visit my games list") do
+  visit mine_game_type_games_path("planning-poker")
+end
+
 Given("{string} created a game named {string}") do |email, name|
   user = User.find_by!(email: email)
   game_type = GameType.find_by!(slug: "planning-poker")
@@ -67,9 +71,7 @@ When("the inactivity timeout job runs") do
 end
 
 Then("I should see {string} marked as ended in \"Mes parties\"") do |name|
-  visit game_type_games_path("planning-poker")
-  within("section", text: "Mes parties") do
-    assert page.has_text?(name)
-    assert page.has_text?("Terminée")
-  end
+  visit mine_game_type_games_path("planning-poker")
+  assert page.has_text?(name)
+  assert page.has_text?("Terminée")
 end

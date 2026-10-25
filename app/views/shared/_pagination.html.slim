@@ -1,0 +1,7 @@
+- if total_pages > 1
+  nav.ds-pagination aria-label="Pagination"
+    - if page > 1
+      = link_to "Précédent", url_for(page: page - 1), class: "ds-btn ds-btn-secondary"
+    span.ds-body-sm = "Page #{page} / #{total_pages}"
+    - if page < total_pages
+      = link_to "Suivant", url_for(page: page + 1), class: "ds-btn ds-btn-secondary"

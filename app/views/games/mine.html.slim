@@ -1,0 +1,7 @@
+.ds-root
+  = render "shared/nav", game_type: @game_type
+  .page
+    h1.ds-heading-xl Mes parties
+
+    = render "shared/my_games", my_games: @my_games
+    = render "shared/pagination", page: @page, total_pages: @total_pages

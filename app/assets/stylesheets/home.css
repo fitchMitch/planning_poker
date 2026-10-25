@@ -1,4 +1,5 @@
 .nav {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,6 +66,18 @@
   gap: var(--space-8);
   align-items: center;
   flex-shrink: 0;
+  min-width: 0;
+}
+
+.nav-actions span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .nav-actions span { max-width: 90px; }
 }
 
 .nav-toggle {
@@ -74,6 +87,25 @@
 @media (max-width: 640px) {
   .nav-links { display: none; }
   .nav-toggle { display: inline-flex; }
+
+  .nav-links--open {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-8);
+    padding: var(--space-8) var(--space-16);
+    background: var(--surface-200);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+
+  .nav-links--open li {
+    width: 100%;
+  }
 }
 
 .hero {
@@ -107,6 +139,7 @@
 
 .hero-actions {
   display: flex;
+  align-items: center;
   gap: var(--space-8);
   justify-content: center;
   flex-wrap: wrap;
@@ -159,6 +192,8 @@
 }
 
 .page {
+  max-width: 880px;
+  margin: 0 auto;
   padding: var(--space-16);
 }
 
