@@ -8,8 +8,8 @@ section
         - rejoinable = game.state != "ended" && game.participants.active.exists?(user: current_user)
         .ds-card
           h3.ds-heading-md = game.name
-          - if game.creator != current_user
-            span.ds-hint = "Créateur : #{game.creator&.email}"
+          - if game.creator && game.creator != current_user
+            span.ds-hint = "Créateur : #{game.creator.email}"
           - if rejoinable
             = link_to "Retourner à la partie", game_path(game), class: "ds-btn ds-btn-primary"
           - elsif game.state == "ended"

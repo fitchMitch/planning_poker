@@ -13,7 +13,8 @@
             - @open_games.each do |game|
               .ds-card
                 h3.ds-heading-md = game.name
-                span.ds-hint = "Créateur : #{game.creator&.email}"
+                - if game.creator && game.creator != current_user
+                  span.ds-hint = "Créateur : #{game.creator.email}"
                 p.ds-body-sm = game.description
                 - pending = JoinRequest.pending_for?(game: game, user: current_user)
                 - if pending

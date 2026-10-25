@@ -34,6 +34,32 @@ RSpec.describe "GameTypes", type: :request do
       expect(response.body).to include("Game 5") # most recent
       expect(response.body).not_to include("Game 0") # 6th-oldest, excluded
     end
+
+    it "shows the creator's email unless the viewer is the creator" do
+      creator = create(:user, email: "creator@example.com")
+      viewer = create(:user)
+      game = create(:game, game_type: game_type)
+      create(:participant, game: game, user: creator, creator: true)
+
+      sign_in viewer
+      get game_type_path(game_type.slug)
+      expect(response.body).to include("Créateur : creator@example.com")
+
+      sign_in creator
+      get game_type_path(game_type.slug)
+      expect(response.body).not_to include("Créateur : creator@example.com")
+    end
+
+    it "hides the creator line instead of showing it empty when the creator has left" do
+      creator = create(:user)
+      game = create(:game, game_type: game_type)
+      create(:participant, game: game, user: creator, creator: true, left_at: 1.hour.ago)
+
+      sign_in create(:user)
+      get game_type_path(game_type.slug)
+
+      expect(response.body).not_to include("Créateur : ")
+    end
   end
 
   describe "GET /game_types/:slug Mes parties" do
