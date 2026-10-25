@@ -2,7 +2,7 @@
   header.nav
     .nav-brand
       .nav-logo PP
-      span.ds-heading-md Planning Poker Platform
+      span.ds-heading-md Oscar's Games
     .nav-actions
       - if user_signed_in?
         span.ds-body-sm style="color: var(--ink-muted);" = current_user.email
@@ -14,6 +14,6 @@
     h1.ds-heading-xl Choisissez un jeu
     - @game_types.each do |game_type|
       .ds-card
-        h2.ds-heading-md = game_type.name
+        h2.ds-heading-md style="color: var(--accent);" = game_type.name
         p.ds-body-sm = game_type.description
         = link_to "Voir", game_type_path(game_type.slug), class: "ds-btn ds-btn-primary"

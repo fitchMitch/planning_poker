@@ -39,4 +39,123 @@ RSpec.describe "Games", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
     expect(response.body).to include("Vous participez déjà à Sprint 4")
   end
+
+  describe "POST /games/:id/leave" do
+    it "lets a participant leave their game" do
+      participant = create(:participant)
+      sign_in participant.user
+
+      post leave_game_path(participant.game)
+
+      expect(participant.reload.left_at).not_to be_nil
+    end
+
+    it "does nothing if the user is not a participant of that game" do
+      game = create(:game, game_type: game_type)
+      other_participant = create(:participant, game: game)
+      sign_in create(:user)
+
+      post leave_game_path(game)
+
+      expect(response).to redirect_to(game_type_games_path(game_type.slug))
+      expect(other_participant.reload.left_at).to be_nil
+    end
+  end
+
+  describe "GET /games/:id" do
+    it "shows the game to one of its active participants" do
+      participant = create(:participant)
+      sign_in participant.user
+
+      get game_path(participant.game)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(participant.game.name)
+    end
+
+    it "redirects a non-participant away" do
+      game = create(:game, game_type: game_type)
+      sign_in create(:user)
+
+      get game_path(game)
+
+      expect(response).to redirect_to(game_type_games_path(game_type.slug))
+    end
+
+    it "shows pending join requests to an active participant" do
+      participant = create(:participant)
+      join_request = create(:join_request, game: participant.game)
+      sign_in participant.user
+
+      get game_path(participant.game)
+
+      expect(response.body).to include(join_request.user.email)
+    end
+  end
+
+  describe "GET /game_types/:slug/games" do
+    it "lists open games" do
+      open_game = create(:game, game_type: game_type, state: "lobby")
+      create(:game, game_type: game_type, state: "ended")
+      sign_in create(:user)
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include(open_game.name)
+    end
+
+    it "only lists open games for the given game type" do
+      open_game = create(:game, game_type: game_type, state: "lobby")
+      other_game_type = create(:game_type)
+      other_type_game = create(:game, game_type: other_game_type, state: "lobby")
+      sign_in create(:user)
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include(open_game.name)
+      expect(response.body).not_to include(other_type_game.name)
+    end
+
+    it "lists the signed-in user's participation history, including left and ended games" do
+      user = create(:user)
+      game = create(:game, game_type: game_type)
+      past_participant = create(:participant, game: game, user: user, left_at: 1.day.ago)
+      sign_in user
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include(past_participant.game.name)
+    end
+
+    it "renders without error when there are no games at all" do
+      sign_in create(:user)
+      get game_type_games_path(game_type.slug)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "shows the creator's email under each open game" do
+      creator = create(:user, email: "creator@example.com")
+      open_game = create(:game, game_type: game_type, state: "lobby")
+      create(:participant, game: open_game, user: creator, creator: true)
+      sign_in create(:user)
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include("creator@example.com")
+    end
+
+    it "offers to rejoin a game the user left and then rejoined, instead of showing it as ended or left" do
+      user = create(:user)
+      game = create(:game, game_type: game_type, state: "in_progress")
+      create(:participant, game: game, user: user, left_at: 1.hour.ago)
+      create(:participant, game: game, user: user)
+      sign_in user
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include("Retourner à la partie")
+      expect(response.body).not_to include("Terminée")
+      expect(response.body).not_to include("Quittée")
+    end
+  end
 end

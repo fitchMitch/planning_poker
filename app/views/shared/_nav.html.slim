@@ -1,0 +1,19 @@
+header.nav
+  = link_to root_path, class: "nav-brand" do
+    .nav-logo PP
+    span.ds-heading-md Oscar's Games
+  ul.nav-links
+    li
+      = link_to "Mes parties", game_type_games_path(game_type.slug)
+    li
+      = link_to "Toutes les parties", game_type_games_path(game_type.slug)
+    li
+      - if current_user.current_game
+        button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
+        span.ds-hint.ds-hint--inline Vous participez déjà à #{current_user.current_game.name}
+      - else
+        = link_to "Créer une partie", new_game_type_game_path(game_type.slug), class: "ds-btn ds-btn-primary"
+  .nav-actions
+    button.ds-btn.nav-toggle.ds-btn-secondary type="button" aria-label="Menu" ☰
+    span.ds-body-sm style="color: var(--ink-muted);" = current_user.email
+    = button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "ds-btn ds-btn-secondary"
