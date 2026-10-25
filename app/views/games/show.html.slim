@@ -17,4 +17,11 @@
           = button_to "Accepter", accept_join_request_path(join_request), method: :patch, class: "ds-btn ds-btn-primary"
           = button_to "Refuser", reject_join_request_path(join_request), method: :patch, class: "ds-btn ds-btn-secondary"
 
-  = button_to "Quitter la partie", leave_game_path(@game), method: :post, class: "ds-btn ds-btn-secondary"
+  - other_active = @participants.where.not(id: @current_participant.id)
+  - if @current_participant.creator? && @game.state == "in_progress" && other_active.any?
+    = form_with url: leave_game_path(@game), method: :post do |f|
+      = f.label :successor_id, "Désigner le prochain créateur", class: "ds-label"
+      = f.select :successor_id, other_active.map { |p| [ p.user.email, p.id ] }, include_blank: "Choix aléatoire", class: "ds-input"
+      = f.submit "Quitter la partie", class: "ds-btn ds-btn-secondary"
+  - else
+    = button_to "Quitter la partie", leave_game_path(@game), method: :post, class: "ds-btn ds-btn-secondary"

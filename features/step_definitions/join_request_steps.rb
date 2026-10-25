@@ -1,5 +1,5 @@
 When("I visit the games list") do
-  visit games_path
+  visit game_type_games_path("planning-poker")
 end
 
 Given("{string} created a game named {string}") do |email, name|
@@ -18,6 +18,13 @@ Given("{string} has requested to join {string}") do |email, name|
   user = User.find_by!(email: email)
   game = Game.find_by!(name: name)
   JoinRequest.create!(game: game, user: user)
+end
+
+Given("{string} has been rejected twice requesting to join {string}") do |email, name|
+  user = User.find_by!(email: email)
+  game = Game.find_by!(name: name)
+  JoinRequest.create!(game: game, user: user, status: "rejected")
+  JoinRequest.create!(game: game, user: user, status: "rejected")
 end
 
 When("I visit the game page for {string}") do |name|
@@ -39,8 +46,28 @@ When("I click {string}") do |label|
   click_button label
 end
 
+When("I attempt to request to join {string}") do |name|
+  game = Game.find_by!(name: name)
+  page.driver.submit :post, game_join_requests_path(game), {}
+end
+
+Then("the request to join {string} is refused") do |_name|
+  assert_equal 403, page.status_code
+end
+
+Given("{string} has been inactive for over 30 minutes in {string}") do |email, name|
+  user = User.find_by!(email: email)
+  game = Game.find_by!(name: name)
+  participant = Participant.find_by!(game: game, user: user)
+  participant.update_column(:updated_at, 31.minutes.ago)
+end
+
+When("the inactivity timeout job runs") do
+  ExpireInactiveParticipantsJob.perform_now
+end
+
 Then("I should see {string} marked as ended in \"Mes parties\"") do |name|
-  visit games_path
+  visit game_type_games_path("planning-poker")
   within("section", text: "Mes parties") do
     assert page.has_text?(name)
     assert page.has_text?("Terminée")

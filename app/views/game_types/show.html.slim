@@ -16,7 +16,7 @@
           span.ds-hint Vous participez déjà à #{current_user.current_game.name}
         - else
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
-        = link_to "Parcourir les parties", games_path, class: "ds-btn ds-btn-secondary"
+        = link_to "Parcourir les parties", game_type_games_path(@game_type.slug), class: "ds-btn ds-btn-secondary"
 
     .page
       .games-columns
@@ -31,7 +31,7 @@
                   span.ds-hint = game.creator&.email
                 - if active
                   span.ds-badge En cours
-          = link_to "Voir toutes les parties", games_path, class: "ds-btn ds-btn-secondary"
+          = link_to "Voir toutes les parties", game_type_games_path(@game_type.slug), class: "ds-btn ds-btn-secondary"
 
         = render "shared/my_games", my_games: @my_games
 

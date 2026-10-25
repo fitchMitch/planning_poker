@@ -51,13 +51,13 @@ RSpec.describe "Games", type: :request do
     end
 
     it "does nothing if the user is not a participant of that game" do
-      game = create(:game)
+      game = create(:game, game_type: game_type)
       other_participant = create(:participant, game: game)
       sign_in create(:user)
 
       post leave_game_path(game)
 
-      expect(response).to redirect_to(games_path)
+      expect(response).to redirect_to(game_type_games_path(game_type.slug))
       expect(other_participant.reload.left_at).to be_nil
     end
   end
@@ -74,12 +74,12 @@ RSpec.describe "Games", type: :request do
     end
 
     it "redirects a non-participant away" do
-      game = create(:game)
+      game = create(:game, game_type: game_type)
       sign_in create(:user)
 
       get game_path(game)
 
-      expect(response).to redirect_to(games_path)
+      expect(response).to redirect_to(game_type_games_path(game_type.slug))
     end
 
     it "shows pending join requests to an active participant" do
@@ -93,52 +93,65 @@ RSpec.describe "Games", type: :request do
     end
   end
 
-  describe "GET /games" do
+  describe "GET /game_types/:slug/games" do
     it "lists open games" do
-      open_game = create(:game, state: "lobby")
-      create(:game, state: "ended")
+      open_game = create(:game, game_type: game_type, state: "lobby")
+      create(:game, game_type: game_type, state: "ended")
       sign_in create(:user)
 
-      get games_path
+      get game_type_games_path(game_type.slug)
 
       expect(response.body).to include(open_game.name)
     end
 
+    it "only lists open games for the given game type" do
+      open_game = create(:game, game_type: game_type, state: "lobby")
+      other_game_type = create(:game_type)
+      other_type_game = create(:game, game_type: other_game_type, state: "lobby")
+      sign_in create(:user)
+
+      get game_type_games_path(game_type.slug)
+
+      expect(response.body).to include(open_game.name)
+      expect(response.body).not_to include(other_type_game.name)
+    end
+
     it "lists the signed-in user's participation history, including left and ended games" do
       user = create(:user)
-      past_participant = create(:participant, user: user, left_at: 1.day.ago)
+      game = create(:game, game_type: game_type)
+      past_participant = create(:participant, game: game, user: user, left_at: 1.day.ago)
       sign_in user
 
-      get games_path
+      get game_type_games_path(game_type.slug)
 
       expect(response.body).to include(past_participant.game.name)
     end
 
     it "renders without error when there are no games at all" do
       sign_in create(:user)
-      get games_path
+      get game_type_games_path(game_type.slug)
       expect(response).to have_http_status(:success)
     end
 
     it "shows the creator's email under each open game" do
       creator = create(:user, email: "creator@example.com")
-      open_game = create(:game, state: "lobby")
+      open_game = create(:game, game_type: game_type, state: "lobby")
       create(:participant, game: open_game, user: creator, creator: true)
       sign_in create(:user)
 
-      get games_path
+      get game_type_games_path(game_type.slug)
 
       expect(response.body).to include("creator@example.com")
     end
 
     it "offers to rejoin a game the user left and then rejoined, instead of showing it as ended or left" do
       user = create(:user)
-      game = create(:game, state: "in_progress")
+      game = create(:game, game_type: game_type, state: "in_progress")
       create(:participant, game: game, user: user, left_at: 1.hour.ago)
       create(:participant, game: game, user: user)
       sign_in user
 
-      get games_path
+      get game_type_games_path(game_type.slug)
 
       expect(response.body).to include("Retourner à la partie")
       expect(response.body).not_to include("Terminée")

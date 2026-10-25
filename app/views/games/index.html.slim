@@ -1,5 +1,5 @@
 .ds-root
-  = render "shared/nav", game_type: nil
+  = render "shared/nav", game_type: @game_type
   .page
     h1.ds-heading-xl Les parties
 
@@ -15,7 +15,7 @@
                 h3.ds-heading-md = game.name
                 span.ds-hint = "Créateur : #{game.creator&.email}"
                 p.ds-body-sm = game.description
-                - pending = JoinRequest.exists?(game: game, user: current_user, status: "pending")
+                - pending = JoinRequest.pending_for?(game: game, user: current_user)
                 - if pending
                   button.ds-btn.ds-btn-secondary type="button" disabled=true En attente
                 - else

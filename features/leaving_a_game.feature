@@ -10,3 +10,8 @@ Feature: Leaving a game
     When I visit the game page for "Sprint 70"
     And I click "Quitter la partie"
     Then I should see "Sprint 70" marked as ended in "Mes parties"
+
+  Scenario: An inactive participant is automatically removed, same as an explicit leave
+    When "alice@example.com" has been inactive for over 30 minutes in "Sprint 70"
+    And the inactivity timeout job runs
+    Then I should see "Sprint 70" marked as ended in "Mes parties"

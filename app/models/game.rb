@@ -14,6 +14,6 @@ class Game < ApplicationRecord
   end
 
   def creator
-    participants.find_by(creator: true)&.user
+    participants.active.find_by(creator: true)&.user
   end
 end

@@ -18,3 +18,9 @@ Feature: Requesting to join a game
     When I visit the game page for "Sprint 60"
     And I accept the join request from "bob@example.com"
     Then "bob@example.com" becomes a participant of "Sprint 60"
+
+  Scenario: A member barred after a second rejection cannot request to join again this cycle
+    Given "bob@example.com" has been rejected twice requesting to join "Sprint 60"
+    And I am logged in as "bob@example.com"
+    When I attempt to request to join "Sprint 60"
+    Then the request to join "Sprint 60" is refused

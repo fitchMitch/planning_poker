@@ -10,7 +10,7 @@ class JoinRequestsController < ApplicationController
     return head :forbidden if current_user.current_game
 
     JoinRequest.create!(game: game, user: current_user)
-    redirect_to games_path
+    redirect_to game_type_games_path(game.game_type.slug)
   end
 
   def accept

@@ -18,6 +18,7 @@ class Participant < ApplicationRecord
         remaining.each(&:leave!)
       elsif creator? && game.state == "in_progress"
         next_creator = successor || remaining.sample
+        update!(creator: false)
         next_creator.update!(creator: true)
       end
     end
