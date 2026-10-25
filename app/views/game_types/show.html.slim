@@ -1,25 +1,14 @@
 .ds-root
   - if user_signed_in?
-    header.nav
-      .nav-brand
-        .nav-logo PP
-        span.ds-heading-md Planning Poker
-      ul.nav-links
-        li: = link_to "Mes parties", games_path
-        li: = link_to "Toutes les parties", games_path
-        li
-          - if current_user.current_game
-            button.ds-btn.ds-btn-primary type="button" disabled=true Créer une partie
-            span.ds-hint Vous participez déjà à #{current_user.current_game.name}
-          - else
-            = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
-      .nav-actions
-        button.ds-btn.nav-toggle.ds-btn-secondary type="button" aria-label="Menu" ☰
-        span.ds-body-sm style="color: var(--ink-muted);" = current_user.email
-        = button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "ds-btn ds-btn-secondary"
+    = render "shared/nav", game_type: @game_type
 
     main.hero
-      h1.ds-heading-xl Bon retour !
+      h1.ds-heading-xl
+        | Bon retour sur
+        '
+        span style="color: var(--accent);" = @game_type.name
+        '
+        | !
       p.ds-body.lede Prête à estimer ? Créez une nouvelle partie ou rejoignez-en une déjà en cours.
       .hero-actions
         - if current_user.current_game
@@ -29,12 +18,22 @@
           = link_to "Créer une partie", new_game_type_game_path(@game_type.slug), class: "ds-btn ds-btn-primary"
         = link_to "Parcourir les parties", games_path, class: "ds-btn ds-btn-secondary"
 
-    section
-      h2.ds-heading-lg Parties récentes
-      - @recent_games.each do |game|
-        .ds-card
-          span.ds-body-sm = game.name
-      = link_to "Voir toutes les parties", games_path, class: "ds-btn ds-btn-secondary"
+    .page
+      .games-columns
+        section
+          h2.ds-heading-lg Parties récentes
+          .ds-card-list
+            - @recent_games.each do |game|
+              - active = current_user.current_game == game
+              .ds-card class=("ds-card--active" if active)
+                .ds-card-info
+                  span.ds-body-sm = game.name
+                  span.ds-hint = game.creator&.email
+                - if active
+                  span.ds-badge En cours
+          = link_to "Voir toutes les parties", games_path, class: "ds-btn ds-btn-secondary"
+
+        = render "shared/my_games", my_games: @my_games
 
   - else
     header.nav

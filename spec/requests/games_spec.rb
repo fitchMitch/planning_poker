@@ -120,6 +120,17 @@ RSpec.describe "Games", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it "shows the creator's email under each open game" do
+      creator = create(:user, email: "creator@example.com")
+      open_game = create(:game, state: "lobby")
+      create(:participant, game: open_game, user: creator, creator: true)
+      sign_in create(:user)
+
+      get games_path
+
+      expect(response.body).to include("creator@example.com")
+    end
+
     it "offers to rejoin a game the user left and then rejoined, instead of showing it as ended or left" do
       user = create(:user)
       game = create(:game, state: "in_progress")

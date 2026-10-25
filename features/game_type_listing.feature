@@ -18,4 +18,4 @@ Feature: GameType listing
     When I visit the home page
     Then I should see "Planning Poker"
     When I click on "Planning Poker"
-    Then I should see "Bon retour !"
+    Then I should see "Bon retour sur Planning Poker !"

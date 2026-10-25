@@ -13,6 +13,8 @@
   align-items: center;
   gap: var(--space-4);
   flex-shrink: 0;
+  color: inherit;
+  text-decoration: none;
 }
 
 .nav-logo {
@@ -40,7 +42,7 @@
   min-width: 0;
 }
 
-.nav-links a {
+.nav-links a:not(.ds-btn) {
   color: var(--ink-muted);
   font: 600 14px/20px var(--sans);
   text-decoration: none;
@@ -49,7 +51,7 @@
   white-space: nowrap;
 }
 
-.nav-links a:hover {
+.nav-links a:not(.ds-btn):hover {
   color: var(--ink);
 }
 
@@ -154,4 +156,18 @@
   text-align: center;
   padding: 0 var(--space-16) var(--space-24);
   color: var(--ink-muted);
+}
+
+.page {
+  padding: var(--space-16);
+}
+
+.games-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-16);
+}
+
+@media (max-width: 640px) {
+  .games-columns { grid-template-columns: minmax(0, 1fr); }
 }

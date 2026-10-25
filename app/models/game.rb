@@ -12,4 +12,8 @@ class Game < ApplicationRecord
   def open?
     state.in?(%w[lobby in_progress])
   end
+
+  def creator
+    participants.find_by(creator: true)&.user
+  end
 end

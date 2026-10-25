@@ -4,10 +4,18 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+body {
+  background: var(--surface-100);
+}
+
 .ds-root {
   font-family: var(--sans);
   color: var(--ink);
   background: var(--surface-100);
+}
+
+.ds-root:not(.ds-card) {
+  min-height: 100vh;
 }
 
 .ds-root :focus-visible {
@@ -47,8 +55,30 @@
 .ds-btn-secondary:hover { background: var(--surface-300); }
 
 .ds-btn:disabled {
-  opacity: 0.5;
+  background: var(--surface-300);
+  color: var(--ink-muted);
+  border-color: var(--border);
   cursor: not-allowed;
+}
+
+.notice, .alert {
+  margin: 0;
+  padding: var(--space-6) var(--space-16);
+  font: 600 14px/20px var(--sans);
+}
+
+.notice:empty, .alert:empty {
+  display: none;
+}
+
+.notice {
+  background: var(--success);
+  color: var(--on-success);
+}
+
+.alert {
+  background: var(--danger);
+  color: var(--on-danger);
 }
 
 .ds-card {
@@ -58,11 +88,68 @@
   padding: var(--space-8);
 }
 
+.ds-card--auth {
+  width: 33%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ds-card--active {
+  border-color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.ds-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.ds-hint {
+  display: block;
+  font: 400 13px/18px var(--sans);
+  color: var(--ink-muted);
+}
+
+.ds-status {
+  display: block;
+  margin-top: var(--space-4);
+  margin-left: var(--space-8);
+  font: 600 14px/20px var(--sans);
+  color: var(--ink-muted);
+}
+
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-8);
+  font: 600 12px/18px var(--sans);
+  white-space: nowrap;
+}
+
 .ds-field { margin-bottom: var(--space-8); }
 
 .ds-field > .ds-label { display: block; margin-bottom: var(--space-2); color: var(--ink-muted); }
 
 .ds-field .ds-hint { display: block; font: 400 13px/18px var(--sans); color: var(--ink-muted); margin-top: var(--space-2); }
+
+.ds-hint--inline {
+  font: 400 13px/18px var(--sans);
+  color: var(--ink-muted);
+  margin-left: var(--space-8);
+}
 
 .ds-input {
   display: block;
@@ -106,6 +193,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+.ds-links p {
+  margin: 0;
 }
 
 .ds-links a {

@@ -2,8 +2,11 @@ class GamesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @open_games = Game.open
-    @my_games = Game.joins(:participants).where(participants: { user: current_user }).distinct
+    @open_games = Game.open.order(created_at: :desc)
+    @my_games = Game.joins(:participants)
+                    .where(participants: { user: current_user })
+                    .distinct
+                    .order(created_at: :desc)
   end
 
   def new
